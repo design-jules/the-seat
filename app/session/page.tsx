@@ -1042,13 +1042,12 @@ export default function SessionPage() {
                   height: '36px',
                   borderRadius: '50%',
                   backgroundColor: config.bg,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '18px',
+                  overflow: 'hidden',
                   flexShrink: 0,
+                  position: 'relative',
                 }}>
-                  {config.emoji}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={config.image} alt={config.name} style={{ position: 'absolute', bottom: '-2px', left: '50%', transform: 'translateX(-50%)', height: '38px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                 </div>
                 <div style={{
                   backgroundColor: config.bg,
