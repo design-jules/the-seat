@@ -30,7 +30,12 @@
       "Bash(awk 'NR>=1337 && NR<=1419' /Users/juliepoolie/the-seat/the-seat-framer.html)",
       "Bash(gh auth *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(git commit -m 'Fix: remove leftover config.emoji reference causing build error *)",
+      "Bash(npx tsc *)"
     ]
   }
 }
