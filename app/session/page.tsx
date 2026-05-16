@@ -1217,7 +1217,7 @@ export default function SessionPage() {
 
             {/* Main headline */}
             <h1 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: 800, color: '#FDFAF7', margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.0 }}>
-              Here&rsquo;s your Punch List.
+              Here&rsquo;s your punch list
             </h1>
             {punchlistItems ? (
               <>
