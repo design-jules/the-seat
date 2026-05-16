@@ -405,58 +405,51 @@ export default function SessionPage() {
 
         {/* Hero headline */}
         <div style={{ textAlign: 'center', padding: 'clamp(48px, 7vw, 80px) clamp(24px, 5vw, 60px) 0', animation: 'fadeUp 0.5s ease both' }}>
-          <p style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#149077', marginBottom: '16px' }}>
-            The Seat — Quick Scan
-          </p>
           <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 800, color: '#023B28', lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '20px' }}>
-            Drop your training.<br />We&rsquo;ll tell you the truth.
+            Drop your training.<br />Get three honest seats.
           </h1>
-          <p style={{ fontSize: 'clamp(17px, 2vw, 21px)', fontWeight: 300, color: 'rgba(2,59,40,0.6)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.6 }}>
-            Upload your slides, facilitator notes, handouts, or session outline. We&rsquo;ll run it through The Seat and show you exactly what three very different learners are thinking.
+          <p style={{ fontSize: 'clamp(17px, 2vw, 21px)', fontWeight: 300, color: 'rgba(2,59,40,0.6)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.6 }}>
+            Upload your slides or paste your content. Three very different learners are waiting to read it — and none of them are going to hold back.
           </p>
         </div>
 
-        {/* How it works strip */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0', padding: 'clamp(36px, 5vw, 56px) clamp(24px, 5vw, 60px)', flexWrap: 'wrap', animation: 'fadeUp 0.5s 0.1s ease both' }}>
-          {[
-            { icon: '📂', label: 'Upload your training', sub: 'Slides, notes, handouts — whatever you\'ve got' },
-            { icon: '⚙️', label: 'The Seat engine reads it', sub: 'We extract what\'s actually in there' },
-            { icon: '💬', label: 'Three learners react', sub: 'Honest, specific, a little uncomfortable' },
-          ].map((step, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
-              <div style={{ textAlign: 'center', padding: '0 24px', minWidth: '180px' }}>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>{step.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: '15px', color: '#023B28', marginBottom: '4px' }}>{step.label}</div>
-                <div style={{ fontSize: '13px', color: 'rgba(2,59,40,0.5)', lineHeight: 1.4 }}>{step.sub}</div>
+        {/* Persona showcase */}
+        <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(40px, 5vw, 64px) clamp(24px, 5vw, 40px) clamp(32px, 4vw, 48px)', animation: 'fadeUp 0.5s 0.1s ease both' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(2,59,40,0.12)' }}>
+            {([
+              { img: '/the_skeptic2.png', name: 'The Skeptic', personaName: 'Dana', bg: '#2a3d30', textColor: '#fff', quote: '“Is this worth my time?”', blend: 'screen' as const },
+              { img: '/the_slammed2.png', name: 'The Slammed', personaName: 'Marcus', bg: '#E2F3F0', textColor: '#023B28', quote: '“I’m too busy to be here.”', blend: 'multiply' as const },
+              { img: '/the_hype2.png',    name: 'The Hype',    personaName: 'Bex',   bg: '#EBD6E9', textColor: '#023B28', quote: '“That was SO good. Now what do I do?”', blend: 'multiply' as const },
+            ] as const).map((p, i) => (
+              <div key={p.name} style={{
+                backgroundColor: p.bg,
+                padding: '32px 24px 28px',
+                borderRight: i < 2 ? '1px solid rgba(0,0,0,0.06)' : 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}>
+                <div style={{ height: '160px', position: 'relative', width: '100%', marginBottom: '20px' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.img} alt={p.name} style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', height: '150px', objectFit: 'contain', mixBlendMode: p.blend }} />
+                </div>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: p.textColor, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.55, marginBottom: '3px' }}>
+                  {p.name}
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: p.textColor, opacity: 0.4, marginBottom: '14px' }}>
+                  {p.personaName}
+                </div>
+                <p style={{ fontSize: '15px', fontStyle: 'italic', color: p.textColor, lineHeight: 1.5, margin: 0, opacity: 0.85, fontWeight: 400 }}>
+                  {p.quote}
+                </p>
               </div>
-              {i < 2 && (
-                <div style={{ color: '#149077', fontSize: '22px', fontWeight: 300, opacity: 0.5, padding: '0 4px', flexShrink: 0 }}>→</div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Persona peek */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', padding: '0 24px clamp(40px, 5vw, 60px)', flexWrap: 'wrap', animation: 'fadeUp 0.5s 0.2s ease both' }}>
-          {[
-            { img: '/the_skeptic2.png', name: 'The Skeptic', bg: '#2a3d30', textColor: '#fff', blend: 'screen' as const },
-            { img: '/the_slammed2.png', name: 'The Slammed', bg: '#E2F3F0', textColor: '#023B28', blend: 'multiply' as const },
-            { img: '/the_hype2.png',    name: 'The Hype',    bg: '#EBD6E9', textColor: '#023B28', blend: 'multiply' as const },
-          ].map((p) => (
-            <div key={p.name} className="persona-peek" style={{ width: '160px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(2,59,40,0.1)', transition: 'transform 0.2s ease, box-shadow 0.2s ease', cursor: 'default' }}>
-              <div style={{ backgroundColor: p.bg, height: '140px', position: 'relative', overflow: 'hidden' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.img} alt={p.name} style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', height: '130px', mixBlendMode: p.blend, objectFit: 'contain' }} />
-              </div>
-              <div style={{ backgroundColor: '#fff', padding: '10px 12px' }}>
-                <div style={{ fontWeight: 700, fontSize: '14px', color: '#023B28' }}>{p.name}</div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Upload form */}
-        <div style={{ maxWidth: '680px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 40px) 80px', animation: 'fadeUp 0.5s 0.3s ease both' }}>
+        <div style={{ maxWidth: '680px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 40px) 80px', animation: 'fadeUp 0.5s 0.2s ease both' }}>
 
           {/* PPT callout — prominent */}
           <div style={{
@@ -1209,12 +1202,19 @@ export default function SessionPage() {
 
             {/* Main headline */}
             <h1 style={{ fontSize: 'clamp(36px,5vw,64px)', fontWeight: 800, color: '#FDFAF7', margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.0 }}>
-              Your Punch List.
+              Here&rsquo;s your Punch List.
             </h1>
             {punchlistItems ? (
-              <p style={{ fontSize: 'clamp(17px,2vw,22px)', fontWeight: 300, color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.4 }}>
-                <span style={{ fontWeight: 800, color: '#FDFAF7' }}>{itemCount}</span> thing{itemCount !== 1 ? 's' : ''} standing between this training and greatness.
-              </p>
+              <>
+                <p style={{ fontSize: 'clamp(17px,2vw,22px)', fontWeight: 300, color: 'rgba(255,255,255,0.65)', margin: '0 0 12px', lineHeight: 1.4 }}>
+                  <span style={{ fontWeight: 800, color: '#FDFAF7' }}>{itemCount}</span> thing{itemCount !== 1 ? 's' : ''} standing between this training and greatness.
+                </p>
+                <p style={{ fontSize: 'clamp(14px,1.5vw,16px)', fontWeight: 400, color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.5, maxWidth: '560px' }}>
+                  {selectedPersona === 'skeptic' && 'These are the sticky, memorable changes to make sure the skeptics in your classroom leave convinced — not just tolerated.'}
+                  {selectedPersona === 'slammed' && 'These are the sticky, memorable changes to make sure the overloaded, time-pressed learners in your classroom actually get what they need.'}
+                  {selectedPersona === 'hype' && 'These are the sticky, memorable changes to make sure your most enthusiastic learners don’t just feel inspired — they actually do something differently on Monday.'}
+                </p>
+              </>
             ) : (
               <p style={{ fontSize: '18px', fontWeight: 300, color: 'rgba(255,255,255,0.5)', margin: 0 }}>Building your list...</p>
             )}
@@ -1412,48 +1412,81 @@ export default function SessionPage() {
           <div className="no-print" style={{ backgroundColor: '#023B28', padding: 'clamp(40px,5vw,64px) clamp(24px,5vw,64px)', marginTop: '24px' }}>
             <div style={{ maxWidth: '780px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '20px' }}>
               <h2 style={{ fontSize: 'clamp(22px,3vw,32px)', fontWeight: 800, color: '#FDFAF7', margin: 0, letterSpacing: '-0.02em', lineHeight: 1.2 }}>
-                Made the fixes? Come back and run it again.
+                Want to hear from someone else?
               </h2>
               <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0 }}>
-                Every round makes the training sharper.
+                Try a different seat with the same training — or start fresh with something new.
               </p>
-              <button
-                onClick={() => {
-                  setPhase('upload')
-                  setMessages([])
-                  setExchangeCount(0)
-                  setPunchlistItems(null)
-                  setPunchlistError(null)
-                  setUploadedFile(null)
-                  setPastedText('')
-                  setTrainingContent('')
-                  setQuickScanResults(null)
-                  setSelectedPersona(null)
-                  setTrainingTitle('')
-                  setSessionId(null)
-                  setConfidenceBefore(null)
-                  setConfidenceAfter(null)
-                  setConfidenceAfterSaved(false)
-                  chatInitialized.current = false
-                }}
-                style={{
-                  backgroundColor: '#149077',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '100px',
-                  padding: '16px 36px',
-                  fontSize: '16px',
-                  fontWeight: 800,
-                  fontFamily: 'var(--font-inter-tight), sans-serif',
-                  cursor: 'pointer',
-                  letterSpacing: '-0.01em',
-                  transition: 'background 0.2s ease',
-                }}
-                onMouseOver={e => { (e.currentTarget).style.backgroundColor = '#0e7560' }}
-                onMouseOut={e => { (e.currentTarget).style.backgroundColor = '#149077' }}
-              >
-                Take another seat →
-              </button>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <button
+                  onClick={() => {
+                    setPhase('results')
+                    setMessages([])
+                    setExchangeCount(0)
+                    setPunchlistItems(null)
+                    setPunchlistError(null)
+                    setSelectedPersona(null)
+                    setSessionId(null)
+                    setConfidenceAfter(null)
+                    setConfidenceAfterSaved(false)
+                    chatInitialized.current = false
+                  }}
+                  style={{
+                    backgroundColor: '#149077',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '100px',
+                    padding: '16px 36px',
+                    fontSize: '16px',
+                    fontWeight: 800,
+                    fontFamily: 'var(--font-inter-tight), sans-serif',
+                    cursor: 'pointer',
+                    letterSpacing: '-0.01em',
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseOver={e => { (e.currentTarget).style.backgroundColor = '#0e7560' }}
+                  onMouseOut={e => { (e.currentTarget).style.backgroundColor = '#149077' }}
+                >
+                  Try a different seat →
+                </button>
+                <button
+                  onClick={() => {
+                    setPhase('upload')
+                    setMessages([])
+                    setExchangeCount(0)
+                    setPunchlistItems(null)
+                    setPunchlistError(null)
+                    setUploadedFile(null)
+                    setPastedText('')
+                    setTrainingContent('')
+                    setQuickScanResults(null)
+                    setSelectedPersona(null)
+                    setTrainingTitle('')
+                    setSessionId(null)
+                    setConfidenceBefore(null)
+                    setConfidenceAfter(null)
+                    setConfidenceAfterSaved(false)
+                    chatInitialized.current = false
+                  }}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: 'rgba(255,255,255,0.65)',
+                    border: '2px solid rgba(255,255,255,0.2)',
+                    borderRadius: '100px',
+                    padding: '16px 36px',
+                    fontSize: '16px',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-inter-tight), sans-serif',
+                    cursor: 'pointer',
+                    letterSpacing: '-0.01em',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseOver={e => { (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.4)'; (e.currentTarget).style.color = '#fff' }}
+                  onMouseOut={e => { (e.currentTarget).style.borderColor = 'rgba(255,255,255,0.2)'; (e.currentTarget).style.color = 'rgba(255,255,255,0.65)' }}
+                >
+                  Upload new training
+                </button>
+              </div>
             </div>
           </div>
         )}
