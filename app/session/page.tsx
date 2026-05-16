@@ -394,7 +394,7 @@ export default function SessionPage() {
 
   if (phase === 'upload') {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#FDFAF7', fontFamily: 'var(--font-inter-tight), Inter Tight, sans-serif' }}>
+      <div style={{ minHeight: '100vh', backgroundColor: '#FDFAF7', fontFamily: 'var(--font-inter-tight), Inter Tight, sans-serif', paddingTop: '57px' }}>
         <style>{`
           @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
           @keyframes floatBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
