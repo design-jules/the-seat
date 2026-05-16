@@ -120,6 +120,7 @@ export default function SessionPage() {
   const [confidenceBefore, setConfidenceBefore] = useState<number | null>(null)
   const [confidenceAfter, setConfidenceAfter] = useState<number | null>(null)
   const [confidenceAfterSaved, setConfidenceAfterSaved] = useState(false)
+  const [userName, setUserName] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -132,6 +133,18 @@ export default function SessionPage() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Fetch logged-in user's first name for personalised chat
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        const full = user.user_metadata?.full_name || user.user_metadata?.name || ''
+        const first = full.split(' ')[0]
+        if (first) setUserName(first)
+      }
+    })
+  }, [])
 
   // Prevent browser from opening dragged files as a new page
   useEffect(() => {
@@ -257,7 +270,7 @@ export default function SessionPage() {
     }
   }
 
-  const streamMessage = useCallback(async (msgs: Message[], count: number, persona: Persona, content: string) => {
+  const streamMessage = useCallback(async (msgs: Message[], count: number, persona: Persona, content: string, name?: string | null) => {
     setIsStreaming(true)
     const assistantMessage: Message = { role: 'assistant', content: '', isCoachMode: false }
     setMessages(prev => [...prev, assistantMessage])
@@ -271,6 +284,7 @@ export default function SessionPage() {
           persona,
           trainingContent: content,
           exchangeCount: count,
+          userName: name ?? undefined,
         }),
       })
 
@@ -337,7 +351,7 @@ export default function SessionPage() {
   useEffect(() => {
     if (phase === 'chat' && selectedPersona && !chatInitialized.current) {
       chatInitialized.current = true
-      streamMessage([], 0, selectedPersona, trainingContent)
+      streamMessage([], 0, selectedPersona, trainingContent, userName)
     }
   }, [phase, selectedPersona, trainingContent, streamMessage])
 
@@ -356,7 +370,8 @@ export default function SessionPage() {
       newMessages,
       newExchangeCount,
       selectedPersona,
-      trainingContent
+      trainingContent,
+      userName
     )
   }
 
