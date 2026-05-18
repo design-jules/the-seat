@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 type Phase = 'upload' | 'scanning' | 'results' | 'chat' | 'punchlist'
@@ -101,6 +102,9 @@ async function savePunchlistItems(sessionId: string, items: PunchListItem[]) {
 }
 
 export default function SessionPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [accessGranted, setAccessGranted] = useState(false)
   const [phase, setPhase] = useState<Phase>('upload')
   const [isDragging, setIsDragging] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
@@ -133,6 +137,39 @@ export default function SessionPage() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Check access — Stripe payment or beta code
+  useEffect(() => {
+    const paymentSuccess = searchParams.get('payment_success')
+    const sessionId = searchParams.get('session_id')
+
+    if (paymentSuccess === 'true' && sessionId) {
+      // Verify payment with Stripe
+      fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.valid) {
+            sessionStorage.setItem('the-seat-access', 'paid')
+            setAccessGranted(true)
+            // Clean up URL
+            window.history.replaceState({}, '', '/session')
+          } else {
+            router.push('/access')
+          }
+        })
+    } else {
+      const stored = sessionStorage.getItem('the-seat-access')
+      if (stored === 'paid' || stored === 'code') {
+        setAccessGranted(true)
+      } else {
+        router.push('/access')
+      }
+    }
+  }, [searchParams, router])
 
   // Fetch logged-in user's first name for personalised chat
   useEffect(() => {
@@ -405,6 +442,18 @@ export default function SessionPage() {
     } catch {
       setPunchlistError('Something went wrong generating your punch list. Please try again.')
     }
+  }
+
+  if (!accessGranted) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#FDFAF7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#149077', animation: `dotBounce 1.2s ease-in-out ${i * 0.2}s infinite` }} />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   if (phase === 'upload') {
