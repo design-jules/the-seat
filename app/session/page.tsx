@@ -635,6 +635,25 @@ export default function SessionPage() {
             onBlur={e => { e.target.style.borderColor = 'rgba(2,59,40,0.15)'; e.target.style.boxShadow = 'none' }}
           />
 
+          {/* Content quality nudge */}
+          {pastedText.trim().length > 0 && pastedText.trim().length < 200 && (
+            <div style={{
+              backgroundColor: '#FFF3E8',
+              border: '1.5px solid rgba(232,145,58,0.35)',
+              borderRadius: '14px',
+              padding: '14px 18px',
+              marginBottom: '20px',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '10px',
+            }}>
+              <span style={{ fontSize: '18px', flexShrink: 0, lineHeight: 1.4 }}>💡</span>
+              <p style={{ fontSize: '14px', color: '#023B28', margin: 0, lineHeight: 1.5 }}>
+                <strong>The more you give, the more honest they&apos;ll be.</strong> A few bullet points will get surface reactions. A full outline, slide notes, or session plan will get the real stuff.
+              </p>
+            </div>
+          )}
+
           {/* Confidence rating */}
           <div style={{ marginBottom: '36px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
             <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>

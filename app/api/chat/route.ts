@@ -56,6 +56,12 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = getSystemPrompt(persona, trainingContent, exchangeCount || 0, userName)
 
+    const openingPrompt = persona === 'skeptic'
+      ? 'Give your first reaction to this training. Don\'t introduce yourself by name. Lead with one specific observation — something you actually noticed in the content — then ask the one question that cuts to whether this is worth your time. Be dry, precise, direct.'
+      : persona === 'slammed'
+      ? 'Give your first reaction to this training. Don\'t introduce yourself by name. You just sat down and skimmed it. Tell them the first thing that hit you — is there a clear takeaway or not? Be honest, brief, a little impatient.'
+      : 'Give your first reaction to this training. Don\'t introduce yourself by name. You just read through it and you have THOUGHTS. Lead with what genuinely excited you — reference something specific — but make it clear you\'re already thinking about how you\'ll tell everyone about this.'
+
     const stream = await client.messages.stream({
       model: 'claude-opus-4-5',
       max_tokens: 600,
@@ -64,7 +70,7 @@ export async function POST(request: NextRequest) {
         ? [
             {
               role: 'user',
-              content: 'Introduce yourself and give your first reaction to this training. Be specific — reference something you actually noticed in the content.',
+              content: openingPrompt,
             },
           ]
         : messages,
