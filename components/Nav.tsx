@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import type { User } from '@supabase/supabase-js';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -14,6 +17,37 @@ const navLinks = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      router.refresh();
+    });
+    return () => subscription.unsubscribe();
+  }, [router]);
+
+  const handleSignIn = async () => {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    router.refresh();
+  };
+
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || null;
 
   return (
     <nav>
@@ -35,10 +69,25 @@ export default function Nav() {
         </div>
       </div>
       <div className="nav-right">
-        <Link href="/sessions" className="nav-tab" style={{ borderBottom: 'none', fontSize: '13px' }}>
-          My Sessions
-        </Link>
-        <button className="btn-signin">Sign in with Google</button>
+        {user && (
+          <Link href="/sessions" className="nav-tab" style={{ borderBottom: 'none', fontSize: '13px' }}>
+            My Sessions
+          </Link>
+        )}
+        {user ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#023B28', opacity: 0.6 }}>
+              Hey, {firstName}
+            </span>
+            <button className="btn-signin" onClick={handleSignOut}>
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <button className="btn-signin" onClick={handleSignIn}>
+            Sign in with Google
+          </button>
+        )}
       </div>
     </nav>
   );
