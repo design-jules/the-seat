@@ -659,24 +659,32 @@ export default function SessionPage() {
             <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>
               Before we dig in — how confident are you in this training right now?
             </p>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                <button
-                  key={n}
-                  onClick={() => setConfidenceBefore(n)}
-                  style={{
-                    width: '36px', height: '36px', borderRadius: '50%', border: 'none',
-                    backgroundColor: confidenceBefore === n ? '#149077' : confidenceBefore && n <= confidenceBefore ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                    color: confidenceBefore === n ? '#fff' : '#023B28',
-                    fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                    transition: 'all 0.15s ease', flexShrink: 0,
-                    fontFamily: 'var(--font-inter-tight), sans-serif',
-                  }}
-                >{n}</button>
-              ))}
-              <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', marginLeft: '4px', whiteSpace: 'nowrap' }}>
-                {confidenceBefore ? `${confidenceBefore}/10` : '1 = not at all · 10 = rock solid'}
-              </span>
+            <div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                  <button
+                    key={n}
+                    onClick={() => setConfidenceBefore(n)}
+                    style={{
+                      width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                      backgroundColor: confidenceBefore === n ? '#149077' : confidenceBefore && n <= confidenceBefore ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
+                      color: confidenceBefore === n ? '#fff' : '#023B28',
+                      fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                      transition: 'all 0.15s ease', flexShrink: 0,
+                      fontFamily: 'var(--font-inter-tight), sans-serif',
+                    }}
+                  >{n}</button>
+                ))}
+                {confidenceBefore && (
+                  <span style={{ fontSize: '12px', color: '#149077', fontWeight: 700, marginLeft: '4px' }}>
+                    {confidenceBefore}/10
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', paddingRight: '4px' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>not at all</span>
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>world-class</span>
+              </div>
             </div>
           </div>
 
@@ -1462,6 +1470,10 @@ export default function SessionPage() {
                      'same as before'}
                   </span>
                 )}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>not at all</span>
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>world-class</span>
               </div>
             </div>
           )}
