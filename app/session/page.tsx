@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -101,7 +101,7 @@ async function savePunchlistItems(sessionId: string, items: PunchListItem[]) {
   }
 }
 
-export default function SessionPage() {
+function SessionPageInner() {
   const searchParams = useSearchParams()
   const [phase, setPhase] = useState<Phase>('upload')
   const [showAccessGate, setShowAccessGate] = useState(false)
@@ -1718,4 +1718,12 @@ export default function SessionPage() {
   }
 
   return null
+}
+
+export default function SessionPage() {
+  return (
+    <Suspense>
+      <SessionPageInner />
+    </Suspense>
+  )
 }
