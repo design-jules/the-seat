@@ -298,14 +298,30 @@ function SessionPageInner() {
     }
   }
 
-  const handlePersonaSelect = (persona: Persona, skipToList = false) => {
+  const handlePersonaSelect = async (persona: Persona, skipToList = false) => {
+    // Check sessionStorage first (fast)
     const stored = sessionStorage.getItem('the-seat-access')
     if (stored === 'paid' || stored === 'code') {
       proceedWithPersona(persona, skipToList)
-    } else {
-      setPendingPersona({ persona, skipToList })
-      setShowAccessGate(true)
+      return
     }
+    // Check if signed-in user is permanently approved
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const { data } = await supabase
+        .from('approved_users')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .single()
+      if (data) {
+        sessionStorage.setItem('the-seat-access', 'approved')
+        proceedWithPersona(persona, skipToList)
+        return
+      }
+    }
+    setPendingPersona({ persona, skipToList })
+    setShowAccessGate(true)
   }
 
   const handleGatePay = async () => {
@@ -506,9 +522,19 @@ function SessionPageInner() {
           <h2 style={{ fontSize: 'clamp(26px,4vw,36px)', fontWeight: 800, color: '#023B28', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '12px' }}>
             Ready to go deeper?
           </h2>
-          <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '32px' }}>
+          <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '24px' }}>
             The quick scan is free. To chat with your learner and get your punch list, get access for $19 — or enter your beta code below.
           </p>
+
+          {/* Google sign-in nudge */}
+          {!userName && (
+            <div style={{ backgroundColor: 'rgba(20,144,119,0.08)', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '18px' }}>💡</span>
+              <p style={{ fontSize: '13px', color: '#023B28', margin: 0, lineHeight: 1.5 }}>
+                <strong>Sign in with Google first</strong> and your access will be saved — no code needed next time.
+              </p>
+            </div>
+          )}
 
           <button
             onClick={handleGatePay}
