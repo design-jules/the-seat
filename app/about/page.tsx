@@ -59,7 +59,7 @@ export default function About() {
 
             <div className="about-fact-item">
               <div className="about-fact-check"><CheckIcon /></div>
-              <p className="about-fact-text"><strong>I built The Seat because people kept asking me how I go about building great training and for a long time I couldn&apos;t figure out how to explain it.</strong> Now I can. You&apos;re welcome.</p>
+              <p className="about-fact-text"><strong>I built The Seat because people kept asking me how I build great training. For a long time I couldn&apos;t figure out how to explain it. Now I can. The Seat has the logic, the special sauce, and the magic to help you build world-class training.</strong></p>
             </div>
 
             <div className="about-fact-item">
@@ -76,7 +76,7 @@ export default function About() {
         <div className="about-obsess-inner">
 
           <h2 className="about-obsess-heading">
-            <span className="light">Currently </span><span className="bold">Obsessing Over</span>
+            <span className="light">Current </span><span className="bold">Obsessions</span>
           </h2>
 
           <div className="about-obsess-grid">

@@ -15,7 +15,7 @@ export default function Home() {
             Design from<br /><span style={{ color: 'var(--white)' }}>the seat</span> that<br />matters.
           </h1>
           <p className="hero-subhead">
-            Your training looks great. But what does your learner actually think?
+            Your training looks great. But what do your learners think?
             Find out before you&apos;re in the room.
           </p>
           <div className="hero-buttons">

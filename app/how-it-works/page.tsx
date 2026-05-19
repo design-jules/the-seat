@@ -80,7 +80,7 @@ export default function HowItWorks() {
 
       {/* CTA Strip */}
       <section className="hiw-cta-strip">
-        <h3>Ready to find out what your learner<br />is actually thinking?</h3>
+        <h3>Ready to find out what your learners are actually thinking?</h3>
         <Link href="/session" className="btn-primary" style={{ fontSize: '16px', padding: '15px 36px' }}>Take a Seat</Link>
       </section>
     </main>

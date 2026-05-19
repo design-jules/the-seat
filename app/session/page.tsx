@@ -523,15 +523,34 @@ function SessionPageInner() {
             Ready to go deeper?
           </h2>
           <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '24px' }}>
-            The quick scan is free. To chat with your learner and get your punch list, get access for $19 — or enter your beta code below.
+            The quick scan is free. To chat with your learner and get your punch list, get access for $19 or enter your beta code below.
           </p>
 
-          {/* Google sign-in nudge */}
+          {/* Google sign-in — shown when not logged in */}
           {!userName && (
-            <div style={{ backgroundColor: 'rgba(20,144,119,0.08)', borderRadius: '12px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '18px' }}>💡</span>
-              <p style={{ fontSize: '13px', color: '#023B28', margin: 0, lineHeight: 1.5 }}>
-                <strong>Sign in with Google first</strong> and your access will be saved — no code needed next time.
+            <div style={{ marginBottom: '16px' }}>
+              <button
+                onClick={async () => {
+                  const supabase = createClient()
+                  await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: `${window.location.origin}/auth/callback?next=/session` },
+                  })
+                }}
+                style={{
+                  width: '100%', padding: '13px 20px', borderRadius: '100px',
+                  border: '2px solid rgba(2,59,40,0.15)', backgroundColor: '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                  cursor: 'pointer', fontSize: '15px', fontWeight: 700,
+                  fontFamily: 'var(--font-inter-tight), sans-serif', color: '#023B28',
+                  transition: 'border-color 0.2s ease',
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Sign in with Google
+              </button>
+              <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', textAlign: 'center', margin: '8px 0 0', fontWeight: 500 }}>
+                Sign in to save your access. No code needed next time.
               </p>
             </div>
           )}
@@ -627,7 +646,7 @@ function SessionPageInner() {
             Drop your training.<br />Get three honest seats.
           </h1>
           <p style={{ fontSize: 'clamp(17px, 2vw, 21px)', fontWeight: 300, color: 'rgba(2,59,40,0.6)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.6 }}>
-            Upload your slides or paste your content. Three very different learners are waiting to read it — and none of them are going to hold back.
+            Upload your slides or paste your content. Three very different learners are waiting to read it. None of them are going to hold back.
           </p>
         </div>
 
@@ -635,9 +654,9 @@ function SessionPageInner() {
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(40px, 5vw, 64px) clamp(24px, 5vw, 40px) clamp(32px, 4vw, 48px)', animation: 'fadeUp 0.5s 0.1s ease both' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(2,59,40,0.12)' }}>
             {([
-              { img: '/the_skeptic2.png', name: 'The Skeptic', personaName: 'Dana', bg: '#2a3d30', textColor: '#fff', quote: '“Is this worth my time?”', blend: 'screen' as const },
-              { img: '/the_slammed2.png', name: 'The Slammed', personaName: 'Marcus', bg: '#E2F3F0', textColor: '#023B28', quote: '“I’m too busy to be here.”', blend: 'multiply' as const },
-              { img: '/the_hype2.png',    name: 'The Hype',    personaName: 'Bex',   bg: '#EBD6E9', textColor: '#023B28', quote: '“That was SO good. Now what do I do?”', blend: 'multiply' as const },
+              { img: '/the_skeptic2.png', name: 'The Skeptic', personaName: 'Dana', bg: '#2a3d30', textColor: '#fff', quote: "Hi, I'm Dana. I'm skeptical of most training and I'll tell you exactly why.", blend: 'screen' as const },
+              { img: '/the_slammed2.png', name: 'The Slammed', personaName: 'Marcus', bg: '#E2F3F0', textColor: '#023B28', quote: "Hi, I'm Marcus. I'm kind of busy right now. But I'll tell you how to get through to me if you want.", blend: 'multiply' as const },
+              { img: '/the_hype2.png',    name: 'The Hype',    personaName: 'Bex',   bg: '#EBD6E9', textColor: '#023B28', quote: "Hi, I'm Bex. I am SO excited to be here! But honestly? I probably won't do anything with this. Want to help me change that?", blend: 'multiply' as const },
             ] as const).map((p, i) => (
               <div key={p.name} style={{
                 backgroundColor: p.bg,
@@ -680,7 +699,9 @@ function SessionPageInner() {
             alignItems: 'flex-start',
             gap: '12px',
           }}>
-            <span style={{ fontSize: '22px', flexShrink: 0, lineHeight: 1.3 }}>📊</span>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#023B28', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#FDFAF7" strokeWidth="1.5"/><path d="M5 8h6M5 5.5h3M5 10.5h4" stroke="#149077" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            </div>
             <div>
               <p style={{ fontWeight: 700, fontSize: '16px', color: '#023B28', margin: '0 0 4px' }}>
                 Got a PowerPoint? You&rsquo;ll need to export it as a PDF first.
@@ -731,7 +752,9 @@ function SessionPageInner() {
           >
             {uploadedFile ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <div style={{ fontSize: '36px' }}>✅</div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4.5 4.5 7.5-8" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
                 <div style={{ fontWeight: 700, color: '#023B28', fontSize: '18px' }}>{uploadedFile.name}</div>
                 <div style={{ fontSize: '14px', color: '#149077', fontWeight: 600 }}>
                   Ready to go. Hit the button below.
@@ -745,14 +768,16 @@ function SessionPageInner() {
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div className="upload-zone-icon" style={{ fontSize: '40px' }}>⬆️</div>
+                <div className="upload-zone-icon" style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 8l5-5 5 5" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 18h16" stroke="#149077" strokeWidth="2" strokeLinecap="round"/></svg>
+                </div>
                 <p style={{ fontWeight: 700, color: '#023B28', fontSize: '20px', margin: 0 }}>drag it here or click to upload</p>
                 <p style={{ fontSize: '15px', color: 'rgba(2,59,40,0.5)', margin: 0 }}>PDF or Word doc (.pdf, .docx)</p>
               </div>
             )}
           </div>
           <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.35)', textAlign: 'center', marginBottom: '32px' }}>
-            Your slides, facilitator notes, handouts, session outline — anything works
+            Your slides, facilitator notes, handouts, session outline. Anything works.
           </p>
 
           {/* Divider */}
@@ -766,7 +791,7 @@ function SessionPageInner() {
           <textarea
             value={pastedText}
             onChange={e => setPastedText(e.target.value)}
-            placeholder="Paste your slide outline, facilitator notes, session plan, handout copy — whatever you've got. Even rough notes work."
+            placeholder="Paste your slide outline, facilitator notes, session plan, handout copy. Whatever you've got. Even rough notes work."
             style={{
               width: '100%',
               minHeight: '180px',
@@ -801,7 +826,9 @@ function SessionPageInner() {
               alignItems: 'flex-start',
               gap: '10px',
             }}>
-              <span style={{ fontSize: '18px', flexShrink: 0, lineHeight: 1.4 }}>💡</span>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(232,145,58,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5a4 4 0 0 1 1.5 7.7V11H5.5V9.2A4 4 0 0 1 7 1.5z" stroke="#E8913A" strokeWidth="1.3" strokeLinejoin="round"/><path d="M5.5 12.5h3" stroke="#E8913A" strokeWidth="1.3" strokeLinecap="round"/></svg>
+              </div>
               <p style={{ fontSize: '14px', color: '#023B28', margin: 0, lineHeight: 1.5 }}>
                 <strong>The more you give, the more honest they&apos;ll be.</strong> A few bullet points will get surface reactions. A full outline, slide notes, or session plan will get the real stuff.
               </p>
@@ -811,7 +838,7 @@ function SessionPageInner() {
           {/* Confidence rating */}
           <div style={{ marginBottom: '36px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
             <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>
-              Before we dig in — how confident are you in this training right now?
+              Before we dig in: how confident are you in this training right now?
             </p>
             <div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -835,7 +862,7 @@ function SessionPageInner() {
                   </span>
                 )}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', paddingRight: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', maxWidth: '404px' }}>
                 <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>not at all</span>
                 <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>world-class</span>
               </div>
@@ -896,7 +923,9 @@ function SessionPageInner() {
             50% { transform: translateY(-8px); }
           }
         `}</style>
-        <div style={{ fontSize: '48px', animation: 'pulse 2s ease-in-out infinite' }}>🔍</div>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 2s ease-in-out infinite' }}>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="12" cy="12" r="7" stroke="#149077" strokeWidth="2.5"/><path d="M17.5 17.5L23 23" stroke="#149077" strokeWidth="2.5" strokeLinecap="round"/></svg>
+        </div>
         <h2 style={{
           fontSize: '32px',
           fontWeight: 800,
@@ -1008,7 +1037,7 @@ function SessionPageInner() {
                     onMouseOver={e => { (e.currentTarget).style.opacity = '1' }}
                     onMouseOut={e => { (e.currentTarget).style.opacity = '0.8' }}
                   >
-                    Skip the chat — just give me the list →
+                    Skip the chat, just give me the list →
                   </button>
                 </div>
               )
@@ -1116,7 +1145,7 @@ function SessionPageInner() {
               letterSpacing: '-0.01em',
             }}
           >
-            I&rsquo;m done — get my list →
+            I&rsquo;m done. Get my list →
           </button>
           <button
             onClick={() => {
@@ -1455,9 +1484,9 @@ function SessionPageInner() {
                   <span style={{ fontWeight: 800, color: '#FDFAF7' }}>{itemCount}</span> thing{itemCount !== 1 ? 's' : ''} standing between this training and greatness.
                 </p>
                 <p style={{ fontSize: 'clamp(14px,1.5vw,16px)', fontWeight: 400, color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.5, maxWidth: '560px' }}>
-                  {selectedPersona === 'skeptic' && 'These are the sticky, memorable changes to make sure the skeptics in your classroom leave convinced — not just tolerated.'}
+                  {selectedPersona === 'skeptic' && 'These are the sticky, memorable changes to make sure the skeptics in your classroom leave convinced. Not just tolerated.'}
                   {selectedPersona === 'slammed' && 'These are the sticky, memorable changes to make sure the overloaded, time-pressed learners in your classroom actually get what they need.'}
-                  {selectedPersona === 'hype' && 'These are the sticky, memorable changes to make sure your most enthusiastic learners don’t just feel inspired — they actually do something differently on Monday.'}
+                  {selectedPersona === 'hype' && "These are the sticky, memorable changes to make sure your most enthusiastic learners don't just feel inspired. They actually do something differently on Monday."}
                 </p>
               </>
             ) : (
@@ -1589,7 +1618,7 @@ function SessionPageInner() {
           {punchlistItems && (
             <div className="no-print" style={{ backgroundColor: '#fff', borderRadius: '20px', padding: '28px 32px', marginTop: '16px', boxShadow: '0 2px 12px rgba(2,59,40,0.06)' }}>
               <p style={{ fontSize: '15px', fontWeight: 700, color: '#023B28', margin: '0 0 6px', letterSpacing: '-0.01em' }}>
-                Now that you&rsquo;ve seen the list — how are you feeling about this training?
+                Now that you&rsquo;ve seen the list: how are you feeling about this training?
               </p>
               {confidenceBefore !== null && (
                 <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.45)', margin: '0 0 14px' }}>
@@ -1664,7 +1693,7 @@ function SessionPageInner() {
                 Want to hear from someone else?
               </h2>
               <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(255,255,255,0.55)', margin: 0 }}>
-                Try a different seat with the same training — or start fresh with something new.
+                Try a different seat with the same training, or start fresh with something new.
               </p>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <button
