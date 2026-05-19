@@ -488,6 +488,102 @@ export default function SessionPage() {
     }
   }
 
+  if (showAccessGate) {
+    return (
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        backgroundColor: 'rgba(2,59,40,0.7)',
+        backdropFilter: 'blur(6px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '24px',
+        fontFamily: 'var(--font-inter-tight), sans-serif',
+      }}>
+        <div style={{ backgroundColor: '#FDFAF7', borderRadius: '24px', padding: 'clamp(32px,5vw,48px)', maxWidth: '460px', width: '100%', boxShadow: '0 24px 80px rgba(0,0,0,0.3)' }}>
+
+          <p style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#149077', marginBottom: '12px' }}>
+            Unlock The Seat
+          </p>
+          <h2 style={{ fontSize: 'clamp(26px,4vw,36px)', fontWeight: 800, color: '#023B28', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '12px' }}>
+            Ready to go deeper?
+          </h2>
+          <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '32px' }}>
+            The quick scan is free. To chat with your learner and get your punch list, get access for $19 — or enter your beta code below.
+          </p>
+
+          <button
+            onClick={handleGatePay}
+            disabled={gatePayLoading}
+            style={{
+              backgroundColor: '#023B28', color: '#FDFAF7', border: 'none',
+              borderRadius: '100px', padding: '16px 28px', fontSize: '16px',
+              fontWeight: 800, fontFamily: 'var(--font-inter-tight), sans-serif',
+              cursor: gatePayLoading ? 'not-allowed' : 'pointer',
+              width: '100%', marginBottom: '12px',
+              transition: 'background 0.2s ease',
+              opacity: gatePayLoading ? 0.7 : 1,
+            }}
+          >
+            {gatePayLoading ? 'Redirecting...' : 'Get full access — $19 →'}
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
+            <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>or enter a beta code</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+            <input
+              type="text"
+              value={gateCode}
+              onChange={e => { setGateCode(e.target.value.toUpperCase()); setGateCodeError(null) }}
+              onKeyDown={e => e.key === 'Enter' && handleGateCode()}
+              placeholder="ENTER CODE"
+              style={{
+                flex: 1, padding: '12px 16px', borderRadius: '100px',
+                border: `2px solid ${gateCodeError ? '#fca5a5' : 'rgba(2,59,40,0.15)'}`,
+                backgroundColor: '#fff', fontSize: '15px',
+                fontFamily: 'var(--font-inter-tight), sans-serif',
+                fontWeight: 700, color: '#023B28', letterSpacing: '0.08em', outline: 'none',
+              }}
+            />
+            <button
+              onClick={handleGateCode}
+              disabled={gateCodeLoading || !gateCode.trim()}
+              style={{
+                backgroundColor: gateCode.trim() ? '#149077' : 'rgba(2,59,40,0.15)',
+                color: gateCode.trim() ? '#fff' : 'rgba(2,59,40,0.3)',
+                border: 'none', borderRadius: '100px', padding: '12px 20px',
+                fontSize: '14px', fontWeight: 700,
+                fontFamily: 'var(--font-inter-tight), sans-serif',
+                cursor: gateCode.trim() && !gateCodeLoading ? 'pointer' : 'not-allowed',
+                transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+              }}
+            >
+              {gateCodeLoading ? '...' : 'Go →'}
+            </button>
+          </div>
+
+          {gateCodeError && (
+            <p style={{ fontSize: '13px', color: '#dc2626', margin: '0 0 8px', fontWeight: 500 }}>{gateCodeError}</p>
+          )}
+
+          <button
+            onClick={() => { setShowAccessGate(false); setPendingPersona(null) }}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: '13px', color: 'rgba(2,59,40,0.4)', fontWeight: 500,
+              fontFamily: 'var(--font-inter-tight), sans-serif',
+              marginTop: '12px', padding: '4px 0',
+            }}
+          >
+            ← Back to results
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (phase === 'upload') {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#FDFAF7', fontFamily: 'var(--font-inter-tight), Inter Tight, sans-serif', paddingTop: '57px' }}>
@@ -1617,106 +1713,6 @@ export default function SessionPage() {
             </div>
           </div>
         )}
-      </div>
-    )
-  }
-
-  // Access gate modal — shown over results when user tries to proceed without access
-  if (showAccessGate) {
-    return (
-      <div style={{
-        position: 'fixed', inset: 0, zIndex: 200,
-        backgroundColor: 'rgba(2,59,40,0.7)',
-        backdropFilter: 'blur(6px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '24px',
-        fontFamily: 'var(--font-inter-tight), sans-serif',
-      }}>
-        <div style={{ backgroundColor: '#FDFAF7', borderRadius: '24px', padding: 'clamp(32px,5vw,48px)', maxWidth: '460px', width: '100%', boxShadow: '0 24px 80px rgba(0,0,0,0.3)' }}>
-
-          <p style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#149077', marginBottom: '12px' }}>
-            Unlock The Seat
-          </p>
-          <h2 style={{ fontSize: 'clamp(26px,4vw,36px)', fontWeight: 800, color: '#023B28', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '12px' }}>
-            Ready to go deeper?
-          </h2>
-          <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '32px' }}>
-            The quick scan is free. To chat with your learner and get your punch list, get access for $19 — or enter your beta code below.
-          </p>
-
-          {/* Pay button */}
-          <button
-            onClick={handleGatePay}
-            disabled={gatePayLoading}
-            style={{
-              backgroundColor: '#023B28', color: '#FDFAF7', border: 'none',
-              borderRadius: '100px', padding: '16px 28px', fontSize: '16px',
-              fontWeight: 800, fontFamily: 'var(--font-inter-tight), sans-serif',
-              cursor: gatePayLoading ? 'not-allowed' : 'pointer',
-              width: '100%', marginBottom: '12px',
-              transition: 'background 0.2s ease',
-              opacity: gatePayLoading ? 0.7 : 1,
-            }}
-          >
-            {gatePayLoading ? 'Redirecting...' : 'Get full access — $19 →'}
-          </button>
-
-          {/* Divider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
-            <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>or enter a beta code</span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
-          </div>
-
-          {/* Code input */}
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-            <input
-              type="text"
-              value={gateCode}
-              onChange={e => { setGateCode(e.target.value.toUpperCase()); setGateCodeError(null) }}
-              onKeyDown={e => e.key === 'Enter' && handleGateCode()}
-              placeholder="ENTER CODE"
-              style={{
-                flex: 1, padding: '12px 16px', borderRadius: '100px',
-                border: `2px solid ${gateCodeError ? '#fca5a5' : 'rgba(2,59,40,0.15)'}`,
-                backgroundColor: '#fff', fontSize: '15px',
-                fontFamily: 'var(--font-inter-tight), sans-serif',
-                fontWeight: 700, color: '#023B28', letterSpacing: '0.08em', outline: 'none',
-              }}
-            />
-            <button
-              onClick={handleGateCode}
-              disabled={gateCodeLoading || !gateCode.trim()}
-              style={{
-                backgroundColor: gateCode.trim() ? '#149077' : 'rgba(2,59,40,0.15)',
-                color: gateCode.trim() ? '#fff' : 'rgba(2,59,40,0.3)',
-                border: 'none', borderRadius: '100px', padding: '12px 20px',
-                fontSize: '14px', fontWeight: 700,
-                fontFamily: 'var(--font-inter-tight), sans-serif',
-                cursor: gateCode.trim() && !gateCodeLoading ? 'pointer' : 'not-allowed',
-                transition: 'all 0.2s ease', whiteSpace: 'nowrap',
-              }}
-            >
-              {gateCodeLoading ? '...' : 'Go →'}
-            </button>
-          </div>
-
-          {gateCodeError && (
-            <p style={{ fontSize: '13px', color: '#dc2626', margin: '0 0 8px', fontWeight: 500 }}>{gateCodeError}</p>
-          )}
-
-          <button
-            onClick={() => { setShowAccessGate(false); setPendingPersona(null) }}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '13px', color: 'rgba(2,59,40,0.4)', fontWeight: 500,
-              fontFamily: 'var(--font-inter-tight), sans-serif',
-              marginTop: '12px', padding: '4px 0',
-            }}
-          >
-            ← Back to results
-          </button>
-        </div>
       </div>
     )
   }
