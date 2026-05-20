@@ -109,7 +109,8 @@ function SessionPageInner() {
   const [gateCode, setGateCode] = useState('')
   const [gateCodeError, setGateCodeError] = useState<string | null>(null)
   const [gateCodeLoading, setGateCodeLoading] = useState(false)
-  const [gatePayLoading, setGatePayLoading] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gatePayLoading, setGatePayLoading] = useState(false) // used when beta mode is off
   const [betaEmail, setBetaEmail] = useState('')
   const [betaEmailSent, setBetaEmailSent] = useState(false)
   const [betaEmailLoading, setBetaEmailLoading] = useState(false)
@@ -347,6 +348,7 @@ function SessionPageInner() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleGatePay = async () => {
     setGatePayLoading(true)
     try {
@@ -473,7 +475,7 @@ function SessionPageInner() {
       chatInitialized.current = true
       streamMessage([], 0, selectedPersona, trainingContent, userName)
     }
-  }, [phase, selectedPersona, trainingContent, streamMessage])
+  }, [phase, selectedPersona, trainingContent, streamMessage, userName])
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isStreaming || !selectedPersona) return
