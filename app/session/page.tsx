@@ -133,6 +133,7 @@ function SessionPageInner() {
   const [confidenceAfter, setConfidenceAfter] = useState<number | null>(null)
   const [confidenceAfterSaved, setConfidenceAfterSaved] = useState(false)
   const [userName, setUserName] = useState<string | null>(null)
+  const [inputTab, setInputTab] = useState<'upload' | 'paste'>('upload')
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -718,9 +719,9 @@ function SessionPageInner() {
                 alignItems: 'center',
                 textAlign: 'center',
               }}>
-                <div style={{ height: '160px', position: 'relative', width: '100%', marginBottom: '20px' }}>
+                <div style={{ height: '260px', position: 'relative', width: '100%', marginBottom: '20px' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.img} alt={p.name} style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', height: '150px', objectFit: 'contain', mixBlendMode: p.blend }} />
+                  <img src={p.img} alt={p.name} style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', height: '250px', objectFit: 'contain', mixBlendMode: p.blend }} />
                 </div>
                 <div style={{ fontSize: '11px', fontWeight: 700, color: p.textColor, textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.55, marginBottom: '3px' }}>
                   {p.name}
@@ -737,31 +738,7 @@ function SessionPageInner() {
         </div>
 
         {/* Upload form */}
-        <div style={{ maxWidth: '680px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 40px) 80px', animation: 'fadeUp 0.5s 0.2s ease both' }}>
-
-          {/* PPT callout — prominent */}
-          <div style={{
-            background: '#FFF3E8',
-            border: '1.5px solid rgba(232,145,58,0.35)',
-            borderRadius: '14px',
-            padding: '16px 20px',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '12px',
-          }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#023B28', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#FDFAF7" strokeWidth="1.5"/><path d="M5 8h6M5 5.5h3M5 10.5h4" stroke="#149077" strokeWidth="1.5" strokeLinecap="round"/></svg>
-            </div>
-            <div>
-              <p style={{ fontWeight: 700, fontSize: '16px', color: '#023B28', margin: '0 0 4px' }}>
-                Got a PowerPoint? You&rsquo;ll need to export it as a PDF first.
-              </p>
-              <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.6)', margin: 0, lineHeight: 1.5 }}>
-                File → Export → PDF (takes about 10 seconds). Then drop it in below.
-              </p>
-            </div>
-          </div>
+        <div style={{ maxWidth: '720px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 40px) 80px', animation: 'fadeUp 0.5s 0.2s ease both' }}>
 
           {scanError && (
             <div style={{ backgroundColor: '#fee2e2', border: '1px solid #fca5a5', borderRadius: '12px', padding: '12px 20px', marginBottom: '24px', color: '#991b1b', fontSize: '15px' }}>
@@ -769,7 +746,7 @@ function SessionPageInner() {
             </div>
           )}
 
-          {/* Hidden file input — lives outside the drop zone to avoid event loops */}
+          {/* Hidden file input */}
           <input
             ref={fileInputRef}
             type="file"
@@ -779,115 +756,107 @@ function SessionPageInner() {
             style={{ display: 'none' }}
           />
 
-          {/* Drop zone — div with explicit click handler */}
-          <div
-            onClick={openFilePicker}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            className="upload-zone-label"
-            style={{
-              border: `2.5px solid ${isDragging ? '#023B28' : '#149077'}`,
-              borderRadius: '20px',
-              padding: '52px 40px',
-              cursor: 'pointer',
-              backgroundColor: isDragging ? '#f0faf7' : '#FDFAF7',
-              boxShadow: isDragging
-                ? '0 0 0 6px rgba(20,144,119,0.15), 0 12px 40px rgba(2,59,40,0.1)'
-                : '0 2px 16px rgba(2,59,40,0.06)',
-              transition: 'all 0.2s ease',
-              textAlign: 'center',
-              marginBottom: '12px',
-              userSelect: 'none',
-            }}
-          >
-            {uploadedFile ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4.5 4.5 7.5-8" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </div>
-                <div style={{ fontWeight: 700, color: '#023B28', fontSize: '18px' }}>{uploadedFile.name}</div>
-                <div style={{ fontSize: '14px', color: '#149077', fontWeight: 600 }}>
-                  Ready to go. Hit the button below.
+          {/* Tabbed input card */}
+          <div style={{ background: '#fff', borderRadius: '24px', boxShadow: '0 4px 32px rgba(2,59,40,0.09)', overflow: 'hidden', marginBottom: '24px', border: '1px solid rgba(2,59,40,0.07)' }}>
+
+            {/* Tab switcher */}
+            <div style={{ display: 'flex', borderBottom: '1px solid rgba(2,59,40,0.08)', padding: '0 24px' }}>
+              {(['upload', 'paste'] as const).map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setInputTab(tab)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '16px 20px 14px',
+                    fontSize: '14px', fontWeight: 700,
+                    color: inputTab === tab ? '#149077' : 'rgba(2,59,40,0.4)',
+                    borderBottom: inputTab === tab ? '2px solid #149077' : '2px solid transparent',
+                    marginBottom: '-1px',
+                    fontFamily: 'var(--font-inter-tight), sans-serif',
+                    transition: 'color 0.15s',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {tab === 'upload' ? 'Upload a file' : 'Paste text'}
+                </button>
+              ))}
+            </div>
+
+            {/* Upload tab */}
+            {inputTab === 'upload' && (
+              <div style={{ padding: '24px' }}>
+                <div
+                  onClick={openFilePicker}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className="upload-zone-label"
+                  style={{
+                    border: `2px dashed ${isDragging ? '#023B28' : 'rgba(20,144,119,0.4)'}`,
+                    borderRadius: '16px',
+                    padding: '48px 32px',
+                    cursor: 'pointer',
+                    backgroundColor: isDragging ? '#f0faf7' : 'rgba(20,144,119,0.03)',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'center',
+                    userSelect: 'none',
+                  }}
+                >
+                  {uploadedFile ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><path d="M4 10l4.5 4.5 7.5-8" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
+                      <div style={{ fontWeight: 700, color: '#023B28', fontSize: '17px' }}>{uploadedFile.name}</div>
+                      <div style={{ fontSize: '13px', color: '#149077', fontWeight: 600 }}>Ready. Click to swap.</div>
+                    </div>
+                  ) : isDragging ? (
+                    <p style={{ fontWeight: 700, color: '#023B28', fontSize: '20px', margin: 0 }}>go ahead, drop it</p>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                      <div className="upload-zone-icon" style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 8l5-5 5 5" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 18h16" stroke="#149077" strokeWidth="2" strokeLinecap="round"/></svg>
+                      </div>
+                      <p style={{ fontWeight: 700, color: '#023B28', fontSize: '18px', margin: 0 }}>Drag here or click to upload</p>
+                      <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: 0 }}>PDF or Word doc</p>
+                    </div>
+                  )}
                 </div>
-                <div style={{ fontSize: '13px', color: 'rgba(2,59,40,0.4)', marginTop: '2px' }}>Click here to swap the file</div>
+                <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', textAlign: 'center', marginTop: '12px', marginBottom: 0 }}>
+                  Got a PowerPoint? Export as PDF first: File → Export → PDF.
+                </p>
               </div>
-            ) : isDragging ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <div style={{ fontSize: '44px' }}>📂</div>
-                <p style={{ fontWeight: 700, color: '#023B28', fontSize: '22px', margin: 0 }}>go ahead, we can take it</p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div className="upload-zone-icon" style={{ width: '52px', height: '52px', borderRadius: '50%', backgroundColor: 'rgba(20,144,119,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 8l5-5 5 5" stroke="#149077" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 18h16" stroke="#149077" strokeWidth="2" strokeLinecap="round"/></svg>
-                </div>
-                <p style={{ fontWeight: 700, color: '#023B28', fontSize: '20px', margin: 0 }}>drag it here or click to upload</p>
-                <p style={{ fontSize: '15px', color: 'rgba(2,59,40,0.5)', margin: 0 }}>PDF or Word doc (.pdf, .docx)</p>
+            )}
+
+            {/* Paste tab */}
+            {inputTab === 'paste' && (
+              <div style={{ padding: '24px' }}>
+                <textarea
+                  value={pastedText}
+                  onChange={e => setPastedText(e.target.value)}
+                  placeholder="Paste your slide outline, facilitator notes, session plan, handout copy. Whatever you've got. Even rough notes work."
+                  style={{
+                    width: '100%', minHeight: '220px', borderRadius: '12px',
+                    border: '1.5px solid rgba(2,59,40,0.12)', backgroundColor: 'rgba(20,144,119,0.03)',
+                    padding: '16px 18px', fontSize: '15px',
+                    fontFamily: 'var(--font-inter-tight), Inter Tight, sans-serif',
+                    fontWeight: 300, color: '#023B28', resize: 'vertical', outline: 'none',
+                    boxSizing: 'border-box', lineHeight: 1.6,
+                  }}
+                  onFocus={e => { e.target.style.borderColor = '#149077'; e.target.style.boxShadow = '0 0 0 3px rgba(20,144,119,0.1)' }}
+                  onBlur={e => { e.target.style.borderColor = 'rgba(2,59,40,0.12)'; e.target.style.boxShadow = 'none' }}
+                />
+                {pastedText.trim().length > 0 && pastedText.trim().length < 200 && (
+                  <p style={{ fontSize: '13px', color: 'rgba(232,145,58,0.9)', marginTop: '8px', marginBottom: 0, fontWeight: 500 }}>
+                    The more detail you give, the more honest the reactions will be.
+                  </p>
+                )}
               </div>
             )}
           </div>
-          <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.35)', textAlign: 'center', marginBottom: '32px' }}>
-            Your slides, facilitator notes, handouts, session outline. Anything works.
-          </p>
-
-          {/* Divider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
-            <span style={{ fontSize: '13px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>or paste it below</span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
-          </div>
-
-          {/* Textarea */}
-          <textarea
-            value={pastedText}
-            onChange={e => setPastedText(e.target.value)}
-            placeholder="Paste your slide outline, facilitator notes, session plan, handout copy. Whatever you've got. Even rough notes work."
-            style={{
-              width: '100%',
-              minHeight: '180px',
-              borderRadius: '16px',
-              border: '2px solid rgba(2,59,40,0.15)',
-              backgroundColor: '#FDFAF7',
-              padding: '18px 20px',
-              fontSize: '16px',
-              fontFamily: 'var(--font-inter-tight), Inter Tight, sans-serif',
-              fontWeight: 300,
-              color: '#023B28',
-              resize: 'vertical',
-              outline: 'none',
-              boxSizing: 'border-box',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-              lineHeight: 1.6,
-              marginBottom: '32px',
-            }}
-            onFocus={e => { e.target.style.borderColor = '#149077'; e.target.style.boxShadow = '0 0 0 4px rgba(20,144,119,0.12)' }}
-            onBlur={e => { e.target.style.borderColor = 'rgba(2,59,40,0.15)'; e.target.style.boxShadow = 'none' }}
-          />
-
-          {/* Content quality nudge */}
-          {pastedText.trim().length > 0 && pastedText.trim().length < 200 && (
-            <div style={{
-              backgroundColor: '#FFF3E8',
-              border: '1.5px solid rgba(232,145,58,0.35)',
-              borderRadius: '14px',
-              padding: '14px 18px',
-              marginBottom: '20px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '10px',
-            }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'rgba(232,145,58,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5a4 4 0 0 1 1.5 7.7V11H5.5V9.2A4 4 0 0 1 7 1.5z" stroke="#E8913A" strokeWidth="1.3" strokeLinejoin="round"/><path d="M5.5 12.5h3" stroke="#E8913A" strokeWidth="1.3" strokeLinecap="round"/></svg>
-              </div>
-              <p style={{ fontSize: '14px', color: '#023B28', margin: 0, lineHeight: 1.5 }}>
-                <strong>The more you give, the more honest they&apos;ll be.</strong> A few bullet points will get surface reactions. A full outline, slide notes, or session plan will get the real stuff.
-              </p>
-            </div>
-          )}
 
           {/* Confidence rating */}
-          <div style={{ marginBottom: '36px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
+          <div style={{ marginBottom: '28px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
             <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>
               Before we dig in: how confident are you in this training right now?
             </p>
