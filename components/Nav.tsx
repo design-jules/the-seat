@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -54,14 +53,8 @@ export default function Nav() {
     <nav>
       <div className="nav-left">
         <Link href="/" className="nav-brand">
-          <Image
-            src="/Logo_White_theLime_Green_Bkg.png"
-            alt="The Seat"
-            width={100}
-            height={44}
-            style={{ objectFit: 'contain', display: 'block' }}
-            priority
-          />
+          <span className="nav-brand-name">The Seat</span>
+          <span className="nav-dot" />
         </Link>
         <div className="nav-tabs">
           {navLinks.map((link) => (
