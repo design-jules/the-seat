@@ -110,6 +110,9 @@ function SessionPageInner() {
   const [gateCodeError, setGateCodeError] = useState<string | null>(null)
   const [gateCodeLoading, setGateCodeLoading] = useState(false)
   const [gatePayLoading, setGatePayLoading] = useState(false)
+  const [betaEmail, setBetaEmail] = useState('')
+  const [betaEmailSent, setBetaEmailSent] = useState(false)
+  const [betaEmailLoading, setBetaEmailLoading] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [pastedText, setPastedText] = useState('')
@@ -324,6 +327,26 @@ function SessionPageInner() {
     setShowAccessGate(true)
   }
 
+  const handleBetaEmailRequest = async () => {
+    if (!betaEmail.trim()) return
+    setBetaEmailLoading(true)
+    try {
+      const supabase = createClient()
+      await supabase.from('beta_requests').insert({ email: betaEmail.trim() })
+      // Also ping theseatmethod@gmail.com via formsubmit
+      await fetch('https://formsubmit.co/ajax/theseatmethod@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: 'New beta code request', email: betaEmail.trim(), message: `${betaEmail.trim()} wants a beta code for The Seat.` }),
+      })
+      setBetaEmailSent(true)
+    } catch {
+      setBetaEmailSent(true) // show success even if save fails
+    } finally {
+      setBetaEmailLoading(false)
+    }
+  }
+
   const handleGatePay = async () => {
     setGatePayLoading(true)
     try {
@@ -516,64 +539,90 @@ function SessionPageInner() {
       }}>
         <div style={{ backgroundColor: '#FDFAF7', borderRadius: '24px', padding: 'clamp(32px,5vw,48px)', maxWidth: '460px', width: '100%', boxShadow: '0 24px 80px rgba(0,0,0,0.3)' }}>
 
-          <p style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#149077', marginBottom: '12px' }}>
-            Unlock The Seat
-          </p>
+          {/* Beta banner */}
+          <div style={{ backgroundColor: '#E2F3F0', borderRadius: '10px', padding: '8px 14px', marginBottom: '20px', display: 'inline-block' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#023B28', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Beta Testing</span>
+          </div>
+
           <h2 style={{ fontSize: 'clamp(26px,4vw,36px)', fontWeight: 800, color: '#023B28', letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '12px' }}>
             Ready to go deeper?
           </h2>
           <p style={{ fontSize: '16px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', lineHeight: 1.6, marginBottom: '24px' }}>
-            The quick scan is free. To chat with your learner and get your punch list, get access for $19 or enter your beta code below.
+            We&apos;re in beta testing right now. Sign in with Google or drop your email below and we&apos;ll send you a one-time code to try it out.
           </p>
 
-          {/* Google sign-in — shown when not logged in */}
-          {!userName && (
-            <div style={{ marginBottom: '16px' }}>
-              <button
-                onClick={async () => {
-                  const supabase = createClient()
-                  await supabase.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: { redirectTo: `${window.location.origin}/auth/callback?next=/session` },
-                  })
-                }}
+          {/* Google sign-in */}
+          <button
+            onClick={async () => {
+              const supabase = createClient()
+              await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: `${window.location.origin}/auth/callback?next=/session` },
+              })
+            }}
+            style={{
+              width: '100%', padding: '13px 20px', borderRadius: '100px',
+              border: '2px solid rgba(2,59,40,0.15)', backgroundColor: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+              cursor: 'pointer', fontSize: '15px', fontWeight: 700,
+              fontFamily: 'var(--font-inter-tight), sans-serif', color: '#023B28',
+              marginBottom: '8px',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Sign in with Google
+          </button>
+
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '16px 0' }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
+            <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>or request a code</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
+          </div>
+
+          {/* Beta email request */}
+          {betaEmailSent ? (
+            <div style={{ backgroundColor: '#E2F3F0', borderRadius: '14px', padding: '20px', textAlign: 'center', marginBottom: '12px' }}>
+              <p style={{ fontSize: '15px', fontWeight: 700, color: '#023B28', margin: '0 0 4px' }}>You&apos;re on the list!</p>
+              <p style={{ fontSize: '14px', fontWeight: 300, color: 'rgba(2,59,40,0.6)', margin: 0 }}>We&apos;ll send your code shortly.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+              <input
+                type="email"
+                value={betaEmail}
+                onChange={e => setBetaEmail(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleBetaEmailRequest()}
+                placeholder="your@email.com"
                 style={{
-                  width: '100%', padding: '13px 20px', borderRadius: '100px',
+                  flex: 1, padding: '12px 16px', borderRadius: '100px',
                   border: '2px solid rgba(2,59,40,0.15)', backgroundColor: '#fff',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 700,
-                  fontFamily: 'var(--font-inter-tight), sans-serif', color: '#023B28',
-                  transition: 'border-color 0.2s ease',
+                  fontSize: '15px', fontFamily: 'var(--font-inter-tight), sans-serif',
+                  fontWeight: 400, color: '#023B28', outline: 'none',
+                }}
+              />
+              <button
+                onClick={handleBetaEmailRequest}
+                disabled={betaEmailLoading || !betaEmail.trim()}
+                style={{
+                  backgroundColor: betaEmail.trim() ? '#149077' : 'rgba(2,59,40,0.15)',
+                  color: betaEmail.trim() ? '#fff' : 'rgba(2,59,40,0.3)',
+                  border: 'none', borderRadius: '100px', padding: '12px 20px',
+                  fontSize: '14px', fontWeight: 700,
+                  fontFamily: 'var(--font-inter-tight), sans-serif',
+                  cursor: betaEmail.trim() && !betaEmailLoading ? 'pointer' : 'not-allowed',
+                  whiteSpace: 'nowrap',
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-                Sign in with Google
+                {betaEmailLoading ? '...' : 'Send →'}
               </button>
-              <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', textAlign: 'center', margin: '8px 0 0', fontWeight: 500 }}>
-                Sign in to save your access. No code needed next time.
-              </p>
             </div>
           )}
 
-          <button
-            onClick={handleGatePay}
-            disabled={gatePayLoading}
-            style={{
-              backgroundColor: '#023B28', color: '#FDFAF7', border: 'none',
-              borderRadius: '100px', padding: '16px 28px', fontSize: '16px',
-              fontWeight: 800, fontFamily: 'var(--font-inter-tight), sans-serif',
-              cursor: gatePayLoading ? 'not-allowed' : 'pointer',
-              width: '100%', marginBottom: '12px',
-              transition: 'background 0.2s ease',
-              opacity: gatePayLoading ? 0.7 : 1,
-            }}
-          >
-            {gatePayLoading ? 'Redirecting...' : 'Get full access — $19 →'}
-          </button>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
+          {/* Divider before code entry */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '4px 0 16px' }}>
             <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
-            <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>or enter a beta code</span>
+            <span style={{ fontSize: '12px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>already have a code?</span>
             <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(2,59,40,0.1)' }} />
           </div>
 

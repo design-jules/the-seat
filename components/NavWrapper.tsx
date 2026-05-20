@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Nav from './Nav';
 
 export default function NavWrapper() {
@@ -23,11 +24,15 @@ export default function NavWrapper() {
         backdropFilter: 'blur(8px)',
         borderBottom: '1px solid rgba(2,59,40,0.07)',
       }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-          <span style={{ fontSize: '16px', fontWeight: 800, color: '#023B28', letterSpacing: '-0.02em', fontFamily: 'var(--font-inter-tight), sans-serif' }}>
-            The Seat
-          </span>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#149077', display: 'inline-block' }} />
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <Image
+            src="/Logo_White_Green_Bkg.png"
+            alt="The Seat"
+            width={80}
+            height={32}
+            style={{ objectFit: 'contain', display: 'block' }}
+            priority
+          />
         </Link>
         <Link href="/" style={{ fontSize: '13px', fontWeight: 600, color: '#149077', textDecoration: 'none', fontFamily: 'var(--font-inter-tight), sans-serif', letterSpacing: '-0.01em' }}>
           ← Back to home
