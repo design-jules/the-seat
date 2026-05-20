@@ -78,12 +78,12 @@ export default function Contact() {
     <main style={{ background: 'var(--cream)', minHeight: '100vh', paddingTop: '80px' }}>
 
       {/* Hero */}
-      <div style={{ textAlign: 'center', padding: '60px 24px 48px' }}>
+      <div style={{ textAlign: 'center', padding: '60px 24px 48px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/jazzhands.png"
           alt="Jazz hands!"
-          style={{ width: '120px', height: 'auto', marginBottom: '20px' }}
+          style={{ width: '160px', height: 'auto', marginBottom: '24px', display: 'block' }}
         />
         <p style={{
           fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em',
@@ -92,11 +92,11 @@ export default function Contact() {
         }}>In Beta</p>
         <h1 style={{
           fontFamily: 'var(--font-inter-tight), sans-serif',
-          fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800,
+          fontSize: 'clamp(36px, 5vw, 58px)', fontWeight: 800,
           color: 'var(--evergreen)', letterSpacing: '-0.03em',
           lineHeight: 1.1, margin: '0 auto 16px', maxWidth: '600px',
         }}>
-          Come on in. The water is warm.
+          Get ready to party.
         </h1>
         <p style={{
           fontSize: '18px', color: 'rgba(2,59,40,0.6)', maxWidth: '480px',
