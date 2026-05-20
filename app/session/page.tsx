@@ -892,28 +892,28 @@ function SessionPageInner() {
             <div>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                  <button
-                    key={n}
-                    onClick={() => setConfidenceBefore(n)}
-                    style={{
-                      width: '36px', height: '36px', borderRadius: '50%', border: 'none',
-                      backgroundColor: confidenceBefore === n ? '#149077' : confidenceBefore && n <= confidenceBefore ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                      color: confidenceBefore === n ? '#fff' : '#023B28',
-                      fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                      transition: 'all 0.15s ease', flexShrink: 0,
-                      fontFamily: 'var(--font-inter-tight), sans-serif',
-                    }}
-                  >{n}</button>
+                  <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    <button
+                      onClick={() => setConfidenceBefore(n)}
+                      style={{
+                        width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                        backgroundColor: confidenceBefore === n ? '#149077' : confidenceBefore && n <= confidenceBefore ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
+                        color: confidenceBefore === n ? '#fff' : '#023B28',
+                        fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                        transition: 'all 0.15s ease', flexShrink: 0,
+                        fontFamily: 'var(--font-inter-tight), sans-serif',
+                      }}
+                    >{n}</button>
+                    {n === 1 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>not at all</span>}
+                    {n === 10 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>world-class</span>}
+                    {n !== 1 && n !== 10 && <span style={{ fontSize: '10px', visibility: 'hidden' }}>.</span>}
+                  </div>
                 ))}
                 {confidenceBefore && (
                   <span style={{ fontSize: '12px', color: '#149077', fontWeight: 700, marginLeft: '4px' }}>
                     {confidenceBefore}/10
                   </span>
                 )}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', maxWidth: '404px' }}>
-                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>not at all</span>
-                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>world-class</span>
               </div>
             </div>
           </div>
@@ -1676,24 +1676,28 @@ function SessionPageInner() {
               )}
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                  <button
-                    key={n}
-                    onClick={async () => {
-                      setConfidenceAfter(n)
-                      if (sessionId && !confidenceAfterSaved) {
-                        setConfidenceAfterSaved(true)
-                        await saveConfidenceAfter(sessionId, n)
-                      }
-                    }}
-                    style={{
-                      width: '36px', height: '36px', borderRadius: '50%', border: 'none',
-                      backgroundColor: confidenceAfter === n ? '#149077' : confidenceAfter && n <= confidenceAfter ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                      color: confidenceAfter === n ? '#fff' : '#023B28',
-                      fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                      transition: 'all 0.15s ease', flexShrink: 0,
-                      fontFamily: 'var(--font-inter-tight), sans-serif',
-                    }}
-                  >{n}</button>
+                  <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                    <button
+                      onClick={async () => {
+                        setConfidenceAfter(n)
+                        if (sessionId && !confidenceAfterSaved) {
+                          setConfidenceAfterSaved(true)
+                          await saveConfidenceAfter(sessionId, n)
+                        }
+                      }}
+                      style={{
+                        width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                        backgroundColor: confidenceAfter === n ? '#149077' : confidenceAfter && n <= confidenceAfter ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
+                        color: confidenceAfter === n ? '#fff' : '#023B28',
+                        fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                        transition: 'all 0.15s ease', flexShrink: 0,
+                        fontFamily: 'var(--font-inter-tight), sans-serif',
+                      }}
+                    >{n}</button>
+                    {n === 1 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>not at all</span>}
+                    {n === 10 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>world-class</span>}
+                    {n !== 1 && n !== 10 && <span style={{ fontSize: '10px', visibility: 'hidden' }}>.</span>}
+                  </div>
                 ))}
                 {confidenceAfter && confidenceBefore && (
                   <span style={{ fontSize: '13px', fontWeight: 600, color: confidenceAfter >= confidenceBefore ? '#149077' : 'rgba(2,59,40,0.5)', marginLeft: '8px' }}>
@@ -1702,10 +1706,6 @@ function SessionPageInner() {
                      'same as before'}
                   </span>
                 )}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
-                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>not at all</span>
-                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', fontWeight: 500 }}>world-class</span>
               </div>
             </div>
           )}
