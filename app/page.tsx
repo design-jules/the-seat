@@ -16,7 +16,7 @@ export default function Home() {
         <div className="hero-content">
           <h1 className="display hero-anim-1" style={{ color: 'var(--evergreen)' }}>
             Design from<br />
-            <span style={{ color: 'var(--jungle)' }}>the seat</span><br />
+            <span className="hero-lime-highlight">the seat</span><br />
             that matters.
           </h1>
           <p className="hero-subhead hero-anim-3">
