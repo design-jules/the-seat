@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Ticker from '@/components/Ticker';
 import Reveal from '@/components/Reveal';
+import PersonaCycler from '@/components/PersonaCycler';
 
 export default function Home() {
   return (
@@ -13,9 +14,14 @@ export default function Home() {
           <img src="/hero2.png" alt="Person sitting in a chair, seen from behind" />
         </div>
         <div className="hero-content">
-          <p className="eyebrow eyebrow-on-dark hero-anim-1">The Seat Method</p>
+          <div className="hero-badge hero-anim-1">
+            <span className="hero-badge-dot" />
+            The Seat Method
+          </div>
           <h1 className="display hero-anim-2" style={{ color: 'var(--jungle)' }}>
-            Design from<br /><span style={{ color: 'var(--white)' }}>the seat</span> that<br />matters.
+            Design from<br />
+            <span style={{ color: 'var(--white)' }}>the seat</span><br />
+            that matters.
           </h1>
           <p className="hero-subhead hero-anim-3">
             Your training looks great. But what do your learners think?
@@ -48,59 +54,15 @@ export default function Home() {
         <div className="section-inner">
           <Reveal>
             <h2 className="meet-headline">Three seats. Three honest perspectives.</h2>
-            <p className="meet-subhead">Most training is designed from the front of the room. The Seat puts you in the back — in the chair of the person you most need to reach. Upload your training, pick a learner, and find out what&apos;s <em>actually landing</em> before you ever walk in.</p>
-          </Reveal>
-
-          <div className="personas-display-grid">
-
-            <Reveal delay={0} className="persona-float-card">
-              <div className="persona-display" style={{ background: '#FBF4EA' }}>
-                <div className="persona-photo">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/the_skeptic2.png" alt="The Skeptic" />
-                </div>
-                <div className="persona-pill" style={{ background: '#2a3d30' }}>
-                  <span className="persona-pill-name" style={{ color: '#FDFAF7' }}>the skeptic</span>
-                </div>
-                <p className="persona-quote">&ldquo;Why is this worth my time at all?&rdquo;</p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={120} className="persona-float-card">
-              <div className="persona-display" style={{ background: '#E2F3F0' }}>
-                <div className="persona-photo">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/the_hype2.png" alt="The Hype" />
-                </div>
-                <div className="persona-pill" style={{ background: '#F5E8F3' }}>
-                  <span className="persona-pill-name" style={{ color: '#2a3d30' }}>the hype</span>
-                </div>
-                <p className="persona-quote">&ldquo;Wow that was such a fun class, but no idea what to do now.&rdquo;</p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={240} className="persona-float-card">
-              <div className="persona-display" style={{ background: '#EBD6E9' }}>
-                <div className="persona-photo">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/the_slammed2.png" alt="The Slammed" />
-                </div>
-                <div className="persona-pill" style={{ background: '#E2F3F0' }}>
-                  <span className="persona-pill-name" style={{ color: '#2a3d30' }}>the slammed</span>
-                </div>
-                <p className="persona-quote">&ldquo;I&apos;m too busy to be here.&rdquo;</p>
-              </div>
-            </Reveal>
-
-          </div>
-
-          <Reveal delay={200}>
-            <div className="meet-cta">
-              <Link href="/session" className="btn-primary" style={{ fontSize: '16px', padding: '15px 36px' }}>Take a Seat</Link>
-            </div>
+            <p className="meet-subhead">Most training is designed from the front of the room. The Seat puts you in the back — in the chair of the person you most need to reach. Find out what&apos;s <em>actually landing</em> before you ever walk in.</p>
           </Reveal>
         </div>
       </section>
+
+      {/* ── PERSONA CYCLER ───────────────────────────────────── */}
+      <Reveal>
+        <PersonaCycler />
+      </Reveal>
 
     </main>
   );
