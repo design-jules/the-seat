@@ -704,7 +704,7 @@ function SessionPageInner() {
 
         {/* Persona showcase */}
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(40px, 5vw, 64px) clamp(24px, 5vw, 40px) clamp(32px, 4vw, 48px)', animation: 'fadeUp 0.5s 0.1s ease both' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(2,59,40,0.12)' }}>
+          <div className="session-persona-triptych" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(2,59,40,0.12)' }}>
             {([
               { img: '/the_skeptic2.png', name: 'The Skeptic', personaName: 'Dana', bg: '#2a3d30', textColor: '#fff', quote: "Hi, I'm Dana. I'm skeptical of most training and I'll tell you exactly why.", blend: 'screen' as const },
               { img: '/the_slammed2.png', name: 'The Slammed', personaName: 'Marcus', bg: '#E2F3F0', textColor: '#023B28', quote: "Hi, I'm Marcus. I'm kind of busy right now. But I'll tell you how to get through to me if you want.", blend: 'multiply' as const },

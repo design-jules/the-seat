@@ -1259,3 +1259,188 @@ blockquote.pull p {
 /* Divider */
 .divider { border: none; border-top: 1px solid rgba(2,59,40,0.08); margin: 0; }
 .divider-light { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0; }
+
+/* ── Global contrast fix — muted text was too light everywhere ── */
+.body-lg, .body-md, .body-sm { color: rgba(2,59,40,0.75); }
+.hero-subhead { color: rgba(255,255,255,0.72); }
+.step-desc, .hiw-step-desc, .principle-body { color: rgba(2,59,40,0.75); }
+.seat-subhead, .meet-subhead { color: rgba(2,59,40,0.68); }
+.persona-quote { color: rgba(2,59,40,0.78); }
+.psa-text { color: rgba(2,59,40,0.78); }
+.about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
+.about-body-text { color: rgba(2,59,40,0.75); }
+
+/* ══ RESPONSIVE — 768px and below ══════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Nav */
+  nav {
+    padding: 0 16px;
+    height: 56px;
+    flex-wrap: nowrap;
+  }
+  .nav-tabs {
+    display: none;
+  }
+  .nav-brand {
+    border-right: none;
+    padding-right: 0;
+    margin-right: 0;
+  }
+  .nav-right { gap: 8px; }
+  .btn-signup-nav { display: none; }
+
+  /* Hero — stack to single column */
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+  .hero-image {
+    min-height: 260px;
+    order: -1;
+  }
+  .hero-content {
+    padding: 40px 24px 48px;
+  }
+
+  /* How it works — steps grid collapses */
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .step-arrow { display: none; }
+  .step {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(2,59,40,0.08);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num { font-size: 36px; margin-bottom: 8px; }
+
+  /* Persona cards — horizontal scroll instead of stacking */
+  .personas-grid {
+    grid-template-columns: repeat(3, 280px);
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 14px;
+    padding-bottom: 12px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .personas-grid::-webkit-scrollbar { display: none; }
+  .persona-card {
+    height: 460px;
+    flex-shrink: 0;
+  }
+  .persona-photo { height: 260px; }
+
+  /* Persona display grid (home page meet section) */
+  .personas-display-grid {
+    grid-template-columns: repeat(3, 280px);
+    overflow-x: auto;
+    gap: 14px;
+    padding-bottom: 12px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .personas-display-grid::-webkit-scrollbar { display: none; }
+  .persona-display { flex-shrink: 0; }
+
+  /* HIW two-col steps → single */
+  .hiw-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* About — hero photo + text */
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .about-hero-photo {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    aspect-ratio: 3/4;
+  }
+
+  /* About facts — two-col → one-col */
+  .about-facts-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .about-fact-text { font-size: 17px; }
+
+  /* About obsessions — three-col → one-col */
+  .about-obsess-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Principles grid — three-col → one-col */
+  .principles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Resources coming soon — stack */
+  .resources-coming-soon {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Font size relief on mobile */
+  .body-lg { font-size: 18px; }
+  .body-md { font-size: 18px; }
+  .body-sm { font-size: 17px; }
+  .step-desc, .hiw-step-desc { font-size: 17px; }
+  .persona-quote { font-size: 17px; }
+  .psa-text { font-size: 17px; }
+  .about-obsess-body { font-size: 17px; }
+  .principle-body { font-size: 17px; }
+  .resources-sub { font-size: 17px; }
+}
+
+/* ══ RESPONSIVE — 480px and below ══════════════════════════════ */
+@media (max-width: 480px) {
+
+  nav { height: 52px; }
+
+  .hero-content { padding: 32px 20px 40px; }
+  .hero-subhead { font-size: 17px; }
+
+  .persona-card { height: 420px; }
+  .persona-photo { height: 220px; }
+  .persona-pill-name { font-size: 22px; }
+
+  .about-hero-photo {
+    max-width: 240px;
+  }
+  .about-fact-text { font-size: 16px; }
+
+  /* Contact page two-col → single col */
+  .contact-section { padding: 40px 20px; }
+}
+
+/* ── Session page persona triptych on mobile ─────────────────── */
+/* These target inline-styled elements via a wrapper class */
+@media (max-width: 768px) {
+  .session-persona-triptych {
+    grid-template-columns: repeat(3, 240px) !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    border-radius: 20px !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .session-persona-triptych::-webkit-scrollbar { display: none; }
+  .session-persona-triptych > div {
+    flex-shrink: 0;
+  }
+}
