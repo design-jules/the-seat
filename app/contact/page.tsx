@@ -14,12 +14,14 @@ export default function Contact() {
   const [betaEmail, setBetaEmail] = useState('');
   const [betaSubmitted, setBetaSubmitted] = useState(false);
   const [betaSubmitting, setBetaSubmitting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        setIsLoggedIn(true);
         const fullName = user.user_metadata?.full_name || '';
         const userEmail = user.email || '';
         if (fullName) { setName(fullName); setBetaName(fullName); }
@@ -135,7 +137,7 @@ export default function Contact() {
             margin: '0 0 10px', letterSpacing: '-0.02em',
           }}>Get on the list.</h2>
           <p style={{ fontSize: '15px', color: 'rgba(2,59,40,0.6)', margin: '0 0 24px', lineHeight: 1.55 }}>
-            The Seat is in active beta. Sign in with Google for instant access, or drop your email and we will get you in shortly.
+            The Seat is in active beta. Sign up with Google or drop your email below, and we&apos;ll get you in shortly.
           </p>
 
           {betaSubmitted ? (
@@ -172,7 +174,7 @@ export default function Contact() {
                   <path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
                   <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/>
                 </svg>
-                Sign in with Google
+                Sign up with Google
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '0 0 16px' }}>
@@ -266,32 +268,36 @@ export default function Contact() {
           ) : (
             <>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <input
-                  type="text"
-                  placeholder="Your name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  style={{
-                    width: '100%', padding: '12px 16px', borderRadius: '10px',
-                    border: '1.5px solid rgba(155,114,200,0.25)', background: '#fff',
-                    fontSize: '15px', color: 'var(--evergreen)', outline: 'none',
-                    fontFamily: 'inherit', boxSizing: 'border-box',
-                  }}
-                />
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    width: '100%', padding: '12px 16px', borderRadius: '10px',
-                    border: '1.5px solid rgba(155,114,200,0.25)', background: '#fff',
-                    fontSize: '15px', color: 'var(--evergreen)', outline: 'none',
-                    fontFamily: 'inherit', boxSizing: 'border-box',
-                  }}
-                />
+                {!isLoggedIn && (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      style={{
+                        width: '100%', padding: '12px 16px', borderRadius: '10px',
+                        border: '1.5px solid rgba(155,114,200,0.25)', background: '#fff',
+                        fontSize: '15px', color: 'var(--evergreen)', outline: 'none',
+                        fontFamily: 'inherit', boxSizing: 'border-box' as const,
+                      }}
+                    />
+                    <input
+                      type="email"
+                      placeholder="Your email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      style={{
+                        width: '100%', padding: '12px 16px', borderRadius: '10px',
+                        border: '1.5px solid rgba(155,114,200,0.25)', background: '#fff',
+                        fontSize: '15px', color: 'var(--evergreen)', outline: 'none',
+                        fontFamily: 'inherit', boxSizing: 'border-box' as const,
+                      }}
+                    />
+                  </>
+                )}
                 <textarea
                   placeholder="Tell us what you think..."
                   required

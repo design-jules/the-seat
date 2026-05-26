@@ -48,10 +48,11 @@ nav {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding-right: 32px;
+  padding-right: 28px;
   border-right: 1px solid rgba(255,255,255,0.1);
   margin-right: 8px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 .nav-brand-name { color: var(--cream); font-weight: 600; font-size: 16px; letter-spacing: -0.02em; }
 .nav-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--jungle); flex-shrink: 0; }
@@ -90,6 +91,24 @@ nav {
   letter-spacing: -0.01em;
 }
 .btn-signin:hover { opacity: 0.88; }
+.btn-signup-nav {
+  background: transparent;
+  color: rgba(253,250,247,0.7);
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: 1px solid rgba(253,250,247,0.2);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-signup-nav:hover { color: var(--cream); border-color: rgba(253,250,247,0.4); }
 
 /* ── Shared section primitives ───────────────────────── */
 .section { padding: clamp(60px, 8vw, 120px) clamp(20px, 5vw, 80px); }
@@ -489,7 +508,7 @@ blockquote.pull p {
 /* ABOUT */
 .about-hero-new {
   background: var(--cream);
-  padding: clamp(60px, 8vw, 100px) clamp(24px, 6vw, 100px);
+  padding: clamp(48px, 6vw, 80px) clamp(24px, 6vw, 100px) clamp(40px, 5vw, 64px);
 }
 .about-hero-grid {
   display: grid;
@@ -534,7 +553,7 @@ blockquote.pull p {
 }
 .about-facts-section {
   background: var(--white);
-  padding: clamp(60px, 8vw, 100px) clamp(24px, 6vw, 100px);
+  padding: clamp(40px, 5vw, 64px) clamp(24px, 6vw, 100px);
 }
 .about-facts-inner {
   max-width: 1100px;

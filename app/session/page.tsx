@@ -855,13 +855,23 @@ function SessionPageInner() {
             )}
           </div>
 
+          {/* Confidentiality notice */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px 16px', backgroundColor: 'rgba(20,144,119,0.06)', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(20,144,119,0.12)' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+              <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8s2.91 6.5 6.5 6.5S14.5 11.59 14.5 8 11.59 1.5 8 1.5zm.75 9.75h-1.5v-4.5h1.5v4.5zm0-6h-1.5v-1.5h1.5v1.5z" fill="#149077"/>
+            </svg>
+            <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.55)', margin: 0, lineHeight: 1.55 }}>
+              <strong style={{ color: 'rgba(2,59,40,0.75)', fontWeight: 600 }}>Your content stays private.</strong> We do not store your training files or content. Everything is used only during this session and is gone once you leave.
+            </p>
+          </div>
+
           {/* Confidence rating */}
           <div style={{ marginBottom: '28px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
             <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>
               Before we dig in: how confident are you in this training right now?
             </p>
-            <div>
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', minWidth: 'max-content' }}>
                 {[1,2,3,4,5,6,7,8,9,10].map(n => (
                   <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                     <button
@@ -875,13 +885,13 @@ function SessionPageInner() {
                         fontFamily: 'var(--font-inter-tight), sans-serif',
                       }}
                     >{n}</button>
-                    {n === 1 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>not at all</span>}
-                    {n === 10 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>world-class</span>}
-                    {n !== 1 && n !== 10 && <span style={{ fontSize: '10px', visibility: 'hidden' }}>.</span>}
+                    <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap', minHeight: '14px', lineHeight: '14px' }}>
+                      {n === 1 ? 'not at all' : n === 10 ? 'world-class' : ''}
+                    </span>
                   </div>
                 ))}
-                {confidenceBefore && (
-                  <span style={{ fontSize: '12px', color: '#149077', fontWeight: 700, marginLeft: '4px' }}>
+                {confidenceBefore !== null && (
+                  <span style={{ fontSize: '12px', color: '#149077', fontWeight: 700, marginLeft: '4px', alignSelf: 'flex-start', paddingTop: '10px' }}>
                     {confidenceBefore}/10
                   </span>
                 )}
@@ -1645,38 +1655,40 @@ function SessionPageInner() {
                   You rated it {confidenceBefore}/10 before. Let&rsquo;s see if that moved.
                 </p>
               )}
-              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                  <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                    <button
-                      onClick={async () => {
-                        setConfidenceAfter(n)
-                        if (sessionId && !confidenceAfterSaved) {
-                          setConfidenceAfterSaved(true)
-                          await saveConfidenceAfter(sessionId, n)
-                        }
-                      }}
-                      style={{
-                        width: '36px', height: '36px', borderRadius: '50%', border: 'none',
-                        backgroundColor: confidenceAfter === n ? '#149077' : confidenceAfter && n <= confidenceAfter ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                        color: confidenceAfter === n ? '#fff' : '#023B28',
-                        fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                        transition: 'all 0.15s ease', flexShrink: 0,
-                        fontFamily: 'var(--font-inter-tight), sans-serif',
-                      }}
-                    >{n}</button>
-                    {n === 1 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>not at all</span>}
-                    {n === 10 && <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap' }}>world-class</span>}
-                    {n !== 1 && n !== 10 && <span style={{ fontSize: '10px', visibility: 'hidden' }}>.</span>}
-                  </div>
-                ))}
-                {confidenceAfter && confidenceBefore && (
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: confidenceAfter >= confidenceBefore ? '#149077' : 'rgba(2,59,40,0.5)', marginLeft: '8px' }}>
-                    {confidenceAfter > confidenceBefore ? `↑ up ${confidenceAfter - confidenceBefore} from before` :
-                     confidenceAfter < confidenceBefore ? `↓ down ${confidenceBefore - confidenceAfter}` :
-                     'same as before'}
-                  </span>
-                )}
+              <div style={{ overflowX: 'auto', paddingBottom: '4px' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', minWidth: 'max-content' }}>
+                  {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                    <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                      <button
+                        onClick={async () => {
+                          setConfidenceAfter(n)
+                          if (sessionId && !confidenceAfterSaved) {
+                            setConfidenceAfterSaved(true)
+                            await saveConfidenceAfter(sessionId, n)
+                          }
+                        }}
+                        style={{
+                          width: '36px', height: '36px', borderRadius: '50%', border: 'none',
+                          backgroundColor: confidenceAfter === n ? '#149077' : confidenceAfter && n <= confidenceAfter ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
+                          color: confidenceAfter === n ? '#fff' : '#023B28',
+                          fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                          transition: 'all 0.15s ease', flexShrink: 0,
+                          fontFamily: 'var(--font-inter-tight), sans-serif',
+                        }}
+                      >{n}</button>
+                      <span style={{ fontSize: '10px', color: 'rgba(2,59,40,0.35)', fontWeight: 500, whiteSpace: 'nowrap', minHeight: '14px', lineHeight: '14px' }}>
+                        {n === 1 ? 'not at all' : n === 10 ? 'world-class' : ''}
+                      </span>
+                    </div>
+                  ))}
+                  {confidenceAfter !== null && confidenceBefore !== null && (
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: confidenceAfter >= confidenceBefore ? '#149077' : 'rgba(2,59,40,0.5)', marginLeft: '8px', alignSelf: 'flex-start', paddingTop: '10px' }}>
+                      {confidenceAfter > confidenceBefore ? `↑ up ${confidenceAfter - confidenceBefore} from before` :
+                       confidenceAfter < confidenceBefore ? `↓ down ${confidenceBefore - confidenceAfter}` :
+                       'same as before'}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           )}
