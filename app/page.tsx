@@ -18,9 +18,9 @@ export default function Home() {
             <span className="hero-badge-dot" />
             The Seat Method
           </div>
-          <h1 className="display hero-anim-2" style={{ color: 'var(--jungle)' }}>
+          <h1 className="display hero-anim-2" style={{ color: 'var(--white)' }}>
             Design from<br />
-            <span style={{ color: 'var(--white)' }}>the seat</span><br />
+            <span style={{ color: 'var(--jungle)' }}>the seat</span><br />
             that matters.
           </h1>
           <p className="hero-subhead hero-anim-3">
