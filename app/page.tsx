@@ -14,11 +14,7 @@ export default function Home() {
           <img src="/hero2.png" alt="Person sitting in a chair, seen from behind" />
         </div>
         <div className="hero-content">
-          <div className="hero-badge hero-anim-1">
-            <span className="hero-badge-dot" />
-            The Seat Method
-          </div>
-          <h1 className="display hero-anim-2" style={{ color: 'var(--white)' }}>
+          <h1 className="display hero-anim-1" style={{ color: 'var(--white)' }}>
             Design from<br />
             <span style={{ color: 'var(--jungle)' }}>the seat</span><br />
             that matters.
