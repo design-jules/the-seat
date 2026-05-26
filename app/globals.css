@@ -127,7 +127,7 @@ nav {
 .eyebrow-center { text-align: center; }
 
 h1.display {
-  font-size: clamp(48px, 8.5vw, 108px);
+  font-size: clamp(40px, 5.5vw, 76px);
   font-weight: 800;
   line-height: 0.97;
   letter-spacing: -0.04em;
@@ -1352,29 +1352,80 @@ blockquote.pull p {
 }
 
 /* ── Persona Cycler ─────────────────────────────────────────── */
-.cycler-wrap {
-  position: relative;
+/* ── Peek Carousel (PersonaCycler) ──────────────────────────── */
+.cycler-section {
+  background: var(--cream);
+  padding: clamp(40px,5vw,64px) 0 clamp(40px,4vw,56px);
   overflow: hidden;
 }
-.cycler-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 1100px;
+
+/* Stage — fixed height, cards absolutely positioned inside */
+.cycler-stage {
+  position: relative;
+  max-width: 960px;
   margin: 0 auto;
-  min-height: 500px;
-  align-items: center;
-  padding: clamp(32px,5vw,64px) clamp(24px,5vw,80px);
-  gap: clamp(24px,4vw,64px);
-  transition: opacity 0.26s ease;
+  height: clamp(380px, 44vw, 520px);
 }
-.cycler-fading { opacity: 0; }
-.cycler-img-col {
+
+.cycler-card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: clamp(220px, 26vw, 290px);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(2,59,40,0.08), 0 1px 4px rgba(2,59,40,0.05);
+  padding: 20px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.48s cubic-bezier(0.25,1,0.5,1),
+              opacity 0.48s cubic-bezier(0.25,1,0.5,1),
+              box-shadow 0.48s ease;
+  will-change: transform, opacity;
+}
+
+/* Active card — centered, full size, front */
+.cycler-card[data-pos="active"] {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  z-index: 3;
+  cursor: default;
+  box-shadow: 0 8px 40px rgba(2,59,40,0.13), 0 2px 8px rgba(2,59,40,0.07);
+}
+
+/* Right peek card */
+.cycler-card[data-pos="next"] {
+  transform: translateX(calc(-50% + clamp(190px, 26vw, 310px))) scale(0.8);
+  opacity: 0.4;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Left peek card */
+.cycler-card[data-pos="prev"] {
+  transform: translateX(calc(-50% - clamp(190px, 26vw, 310px))) scale(0.8);
+  opacity: 0.4;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.cycler-card[data-pos="next"]:hover,
+.cycler-card[data-pos="prev"]:hover {
+  opacity: 0.65;
+}
+
+/* Photo area inside each card */
+.cycler-card-photo {
+  width: 100%;
+  height: clamp(200px, 28vw, 320px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  height: clamp(320px, 45vw, 480px);
+  overflow: hidden;
 }
-.cycler-img {
+
+.cycler-card-photo img {
   height: 100%;
   width: auto;
   max-width: 100%;
@@ -1382,36 +1433,56 @@ blockquote.pull p {
   object-position: bottom center;
   display: block;
 }
-.cycler-text-col {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.cycler-label {
-  display: inline-flex;
-  align-self: flex-start;
-  padding: 10px 24px;
+
+/* Persona label pill */
+.cycler-card-pill {
+  margin-top: 14px;
+  padding: 8px 20px;
   border-radius: 100px;
-  font-size: clamp(18px, 2vw, 24px);
+  font-size: clamp(13px, 1.4vw, 16px);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   font-family: var(--font-inter-tight), sans-serif;
   white-space: nowrap;
 }
+
+/* Quote row below stage */
+.cycler-quote-row {
+  max-width: 600px;
+  margin: 28px auto 0;
+  text-align: center;
+  padding: 0 clamp(20px, 5vw, 40px);
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .cycler-quote {
-  font-size: clamp(22px, 3vw, 40px);
+  font-size: clamp(18px, 2.2vw, 26px);
   font-weight: 400;
   font-style: italic;
   color: rgba(2,59,40,0.78);
   line-height: 1.35;
   letter-spacing: -0.02em;
   margin: 0;
+  animation: quoteIn 0.4s ease both;
 }
+
+@keyframes quoteIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dot nav */
 .cycler-dots {
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
+  margin-top: 24px;
 }
+
 .cycler-dot {
   width: 8px;
   height: 8px;
@@ -1421,19 +1492,14 @@ blockquote.pull p {
   padding: 0;
   transition: all 0.35s ease;
 }
+
 .cycler-dot-on { width: 28px; }
+
+/* CTA below dots */
 .cycler-cta {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 0 clamp(24px,5vw,80px) clamp(40px,4vw,56px);
-}
-.cycler-hint {
-  font-size: 12px;
-  color: rgba(2,59,40,0.35);
-  font-weight: 500;
-  margin: 0;
+  justify-content: center;
+  padding-top: clamp(24px, 3vw, 36px);
 }
 
 /* ── Angled / diagonal who-section ─────────────────────────── */
@@ -1580,20 +1646,21 @@ blockquote.pull p {
   }
 
   /* Cycler on mobile */
-  .cycler-inner {
-    grid-template-columns: 1fr;
-    min-height: unset;
-    gap: 20px;
-    padding-bottom: 0;
+  .cycler-stage {
+    height: clamp(300px, 72vw, 420px);
   }
-  .cycler-img-col {
-    height: clamp(220px, 55vw, 320px);
-    order: -1;
+  .cycler-card {
+    width: clamp(180px, 52vw, 240px);
   }
-  .cycler-text-col { align-items: center; text-align: center; }
-  .cycler-label { align-self: center; }
-  .cycler-dots { justify-content: center; }
-  .cycler-cta { padding-top: 24px; }
+  .cycler-card[data-pos="next"] {
+    transform: translateX(calc(-50% + clamp(140px, 42vw, 220px))) scale(0.78);
+  }
+  .cycler-card[data-pos="prev"] {
+    transform: translateX(calc(-50% - clamp(140px, 42vw, 220px))) scale(0.78);
+  }
+  .cycler-card-photo {
+    height: clamp(160px, 42vw, 240px);
+  }
 
   /* Font size relief on mobile */
   .body-lg { font-size: 18px; }
