@@ -200,61 +200,35 @@ h3.card-title {
 
 /* Hero */
 .hero {
-  position: relative;
-  background: var(--evergreen);
+  display: grid;
+  grid-template-columns: 44% 56%;
   min-height: clamp(600px, 88vh, 960px);
   overflow: hidden;
-  display: flex;
-  align-items: flex-end;
 }
 
-/* Teal + purple gradient bloom — spans full width */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 90% 55% at 65% 10%, rgba(20,144,119,0.48) 0%, transparent 72%),
-    radial-gradient(ellipse 70% 65% at 90% 55%, rgba(107,58,138,0.50) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 45% at 40% 90%, rgba(20,144,119,0.28) 0%, transparent 68%),
-    radial-gradient(ellipse 55% 40% at 10% 30%, rgba(20,144,119,0.18) 0%, transparent 65%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-image {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 54%;
-  height: 105%;
-  overflow: visible;
-}
-
-.hero-image img {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: right bottom;
-  display: block;
-}
-
+/* Left column — clean white */
 .hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 50%;
-  padding: clamp(48px, 6vw, 80px) clamp(40px, 6vw, 80px) clamp(64px, 9vw, 110px);
+  background: #ffffff;
+  padding: clamp(56px, 7vw, 96px) clamp(36px, 5vw, 72px);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
 }
 
-.hero-content h1 { color: var(--white); margin-bottom: 28px; }
+.hero-content h1 { color: var(--evergreen); margin-bottom: 28px; }
 .hero-content h1 span { color: var(--jungle); }
+
+/* btn-outline on white bg */
+.hero-content .btn-outline {
+  color: var(--evergreen);
+  border-color: rgba(2,59,40,0.28);
+}
+.hero-content .btn-outline:hover { background: rgba(2,59,40,0.06); }
+
 .hero-subhead {
-  color: rgba(255,255,255,0.62);
+  color: rgba(2,59,40,0.62);
   font-size: clamp(17px, 1.8vw, 20px);
   line-height: 1.65;
   font-weight: 300;
@@ -262,6 +236,31 @@ h3.card-title {
   max-width: 400px;
 }
 .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Right column — colorful gradient + figure */
+.hero-image {
+  position: relative;
+  overflow: hidden;
+  background-color: #081a11;
+  background-image:
+    radial-gradient(ellipse 75% 60% at 55% 12%, rgba(20,144,119,0.9) 0%, transparent 62%),
+    radial-gradient(ellipse 65% 72% at 95% 58%, rgba(107,58,138,0.85) 0%, transparent 56%),
+    radial-gradient(ellipse 55% 52% at 25% 90%, rgba(20,144,119,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 80% 92%, rgba(176,255,40,0.35) 0%, transparent 54%),
+    radial-gradient(ellipse 45% 40% at 65% 48%, rgba(107,58,138,0.45) 0%, transparent 52%);
+}
+
+.hero-image img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left bottom;
+  display: block;
+  transform: scaleX(-1); /* flip so cleaner silhouette edge faces the white left */
+}
 
 /* Who this is for */
 .who-section { background: var(--lavender); }
@@ -1543,7 +1542,7 @@ blockquote.pull p {
 
 /* ── Global contrast fix — muted text was too light everywhere ── */
 .body-lg, .body-md, .body-sm { color: rgba(2,59,40,0.75); }
-.hero-subhead { color: rgba(255,255,255,0.72); }
+.hero-subhead { color: rgba(2,59,40,0.62); }
 .step-desc, .hiw-step-desc, .principle-body { color: rgba(2,59,40,0.75); }
 .seat-subhead, .meet-subhead { color: rgba(2,59,40,0.68); }
 .persona-quote { color: rgba(2,59,40,0.78); }
@@ -1573,20 +1572,15 @@ blockquote.pull p {
 
   /* Hero — stack to single column */
   .hero {
-    min-height: clamp(520px, 100vw, 700px);
-    align-items: flex-end;
+    grid-template-columns: 1fr;
+    min-height: unset;
   }
   .hero-image {
-    width: 75%;
-    height: 80%;
-    right: -5%;
-    bottom: 0;
-    opacity: 0.85;
+    height: clamp(280px, 70vw, 400px);
+    order: -1;
   }
   .hero-content {
-    max-width: 100%;
-    padding: 32px 24px 44px;
-    background: linear-gradient(to right, rgba(2,59,40,0.92) 55%, transparent 100%);
+    padding: 36px 24px 48px;
   }
 
   /* How it works — steps grid collapses */

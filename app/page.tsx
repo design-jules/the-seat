@@ -14,7 +14,7 @@ export default function Home() {
           <img src="/hero2.png" alt="Person sitting in a chair, seen from behind" />
         </div>
         <div className="hero-content">
-          <h1 className="display hero-anim-1" style={{ color: 'var(--white)' }}>
+          <h1 className="display hero-anim-1" style={{ color: 'var(--evergreen)' }}>
             Design from<br />
             <span style={{ color: 'var(--jungle)' }}>the seat</span><br />
             that matters.
