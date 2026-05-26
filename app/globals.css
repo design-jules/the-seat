@@ -206,6 +206,10 @@ h3.card-title {
   overflow: hidden;
 }
 
+/* Explicit column placement — content left, figure right */
+.hero-content { grid-column: 1; grid-row: 1; }
+.hero-image   { grid-column: 2; grid-row: 1; }
+
 /* Left column — clean white */
 .hero-content {
   background: #ffffff;
@@ -217,15 +221,20 @@ h3.card-title {
   z-index: 2;
 }
 
-.hero-content h1 { color: var(--evergreen); margin-bottom: 28px; }
+.hero-content h1 {
+  color: var(--evergreen);
+  margin-bottom: 28px;
+  line-height: 1.06; /* slightly more room so "g" descender clears the highlight below */
+}
 
 /* Lime highlight on "the seat" */
 .hero-lime-highlight {
   color: var(--evergreen);
-  background: rgba(196,255,0,0.32);
-  border-radius: 4px;
-  padding: 0 6px 2px;
+  background: rgba(196,255,0,0.34);
+  border-radius: 6px;
+  padding: 2px 8px 4px;
   display: inline-block;
+  margin-top: 2px;
 }
 
 /* btn-outline on white bg */
@@ -254,12 +263,18 @@ h3.card-title {
   background-size: 22px 22px;
 }
 
-/* Fade dots near the left edge so they emerge from darkness */
+/* Dots radiate from her center — transparent near her, dark at the edges */
 .hero-image::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, var(--evergreen) 0%, transparent 38%);
+  background: radial-gradient(
+    ellipse 62% 75% at 40% 62%,
+    transparent 0%,
+    transparent 38%,
+    rgba(2,59,40,0.55) 62%,
+    var(--evergreen) 86%
+  );
   pointer-events: none;
   z-index: 1;
 }
