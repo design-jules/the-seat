@@ -85,10 +85,10 @@ export default function Nav() {
       <div className="nav-left">
         <Link href="/" className="nav-brand">
           <Image
-            src="/logo1.png"
+            src="/newlogo.png"
             alt="The Seat"
-            width={110}
-            height={36}
+            width={130}
+            height={44}
             style={{ objectFit: 'contain', display: 'block' }}
             priority
           />

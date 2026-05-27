@@ -26,10 +26,10 @@ export default function NavWrapper() {
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <Image
-            src="/logo1.png"
+            src="/newlogo.png"
             alt="The Seat"
-            width={110}
-            height={36}
+            width={130}
+            height={44}
             style={{ objectFit: 'contain', display: 'block' }}
             priority
           />
