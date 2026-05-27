@@ -224,12 +224,13 @@ h3.card-title {
   color: #ffffff;
   margin-bottom: 28px;
   line-height: 1.06;
+  font-weight: 300; /* light — lets "the seat" carry the weight */
 }
 
-/* "the seat" — bold italic lime box */
+/* "the seat" — bold italic teal box */
 .hero-lime-highlight {
-  background: #c4ff00;
-  color: #023b28;
+  background: #149077;
+  color: #ffffff;
   border-radius: 6px;
   padding: 0 10px 4px;
   display: inline-block;
@@ -276,23 +277,8 @@ h3.card-title {
   background: transparent;
 }
 
-/* Floating lime orbs — upper right near her head */
-.hero-image::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  background:
-    /* Large ring */
-    radial-gradient(circle at 84% 18%, transparent 22px, rgba(196,255,0,0.55) 22px, rgba(196,255,0,0.55) 26px, transparent 27px),
-    /* Medium ring */
-    radial-gradient(circle at 71% 27%, transparent 13px, rgba(196,255,0,0.45) 13px, rgba(196,255,0,0.45) 16px, transparent 17px),
-    /* Small solid dot */
-    radial-gradient(circle at 91% 31%, rgba(196,255,0,0.5) 0, rgba(196,255,0,0.5) 7px, transparent 8px),
-    /* Tiny dot */
-    radial-gradient(circle at 77% 12%, rgba(196,255,0,0.4) 0, rgba(196,255,0,0.4) 4px, transparent 5px);
-}
+/* Orbs removed */
+.hero-image::before { display: none; }
 
 .hero-image img {
   position: absolute;
