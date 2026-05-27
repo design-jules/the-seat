@@ -201,19 +201,18 @@ h3.card-title {
 /* Hero */
 .hero {
   display: grid;
-  grid-template-columns: 52% 48%;
-  min-height: clamp(600px, 88vh, 960px);
+  grid-template-columns: 46% 54%;
+  grid-template-rows: 1fr;
+  height: clamp(600px, 88vh, 960px);
   overflow: hidden;
+  background: var(--evergreen);
 }
 
-/* Explicit column placement — content left, figure right */
-.hero-content { grid-column: 1; grid-row: 1; }
-.hero-image   { grid-column: 2; grid-row: 1; }
-
-/* Left column — clean white */
+/* Left column — copy, vertically centered */
 .hero-content {
-  background: #ffffff;
-  padding: clamp(56px, 7vw, 96px) clamp(36px, 5vw, 72px);
+  grid-column: 1; grid-row: 1;
+  background: transparent;
+  padding: clamp(56px, 7vw, 96px) clamp(40px, 5vw, 72px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -222,30 +221,45 @@ h3.card-title {
 }
 
 .hero-content h1 {
-  color: var(--evergreen);
+  color: #ffffff;
   margin-bottom: 28px;
-  line-height: 1.06; /* slightly more room so "g" descender clears the highlight below */
+  line-height: 1.06;
 }
 
-/* Lime highlight on "the seat" */
+/* "the seat" — bold italic lime box */
 .hero-lime-highlight {
-  color: var(--evergreen);
-  background: rgba(196,255,0,0.34);
+  background: #c4ff00;
+  color: #023b28;
   border-radius: 6px;
-  padding: 2px 8px 4px;
+  padding: 0 10px 4px;
   display: inline-block;
   margin-top: 2px;
+  font-style: italic;
+  font-weight: 800;
 }
 
-/* btn-outline on white bg */
-.hero-content .btn-outline {
-  color: var(--evergreen);
-  border-color: rgba(2,59,40,0.28);
+/* Primary button — lime filled, pill shape */
+.hero-content .btn-primary {
+  background: #c4ff00;
+  color: #023b28;
+  border-color: transparent;
+  border-radius: 100px;
+  font-weight: 700;
 }
-.hero-content .btn-outline:hover { background: rgba(2,59,40,0.06); }
+.hero-content .btn-primary:hover { background: #d4ff40; }
+
+/* Secondary button — white filled, pill shape */
+.hero-content .btn-outline {
+  background: #ffffff;
+  color: #023b28;
+  border: none;
+  border-radius: 100px;
+  font-weight: 600;
+}
+.hero-content .btn-outline:hover { background: rgba(255,255,255,0.88); }
 
 .hero-subhead {
-  color: rgba(2,59,40,0.62);
+  color: rgba(255,255,255,0.70);
   font-size: clamp(17px, 1.8vw, 20px);
   line-height: 1.65;
   font-weight: 300;
@@ -254,33 +268,30 @@ h3.card-title {
 }
 .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
 
-/* Right column — dark green + lime halftone dots */
+/* Right column — figure */
 .hero-image {
+  grid-column: 2; grid-row: 1;
   position: relative;
   overflow: hidden;
-  background-color: var(--evergreen);
-  background-image: radial-gradient(circle, rgba(196,255,0,0.68) 36%, transparent 36%);
-  background-size: 22px 22px;
+  background: transparent;
 }
 
-/* Dot trail from her back — visible near her left edge, fades rightward */
-.hero-image::after {
+/* Floating lime orbs — upper right near her head */
+.hero-image::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    /* Kill dots at very top + bottom */
-    linear-gradient(to bottom, var(--evergreen) 0%, transparent 14%, transparent 86%, var(--evergreen) 100%),
-    /* Trail: dots visible near her back (left), fade to solid green on the right */
-    radial-gradient(
-      ellipse 72% 58% at 4% 64%,
-      transparent 0%,
-      transparent 36%,
-      rgba(2,59,40,0.62) 60%,
-      var(--evergreen) 80%
-    );
   pointer-events: none;
-  z-index: 1;
+  z-index: 3;
+  background:
+    /* Large ring */
+    radial-gradient(circle at 84% 18%, transparent 22px, rgba(196,255,0,0.55) 22px, rgba(196,255,0,0.55) 26px, transparent 27px),
+    /* Medium ring */
+    radial-gradient(circle at 71% 27%, transparent 13px, rgba(196,255,0,0.45) 13px, rgba(196,255,0,0.45) 16px, transparent 17px),
+    /* Small solid dot */
+    radial-gradient(circle at 91% 31%, rgba(196,255,0,0.5) 0, rgba(196,255,0,0.5) 7px, transparent 8px),
+    /* Tiny dot */
+    radial-gradient(circle at 77% 12%, rgba(196,255,0,0.4) 0, rgba(196,255,0,0.4) 4px, transparent 5px);
 }
 
 .hero-image img {
@@ -292,7 +303,8 @@ h3.card-title {
   object-fit: contain;
   object-position: left bottom;
   display: block;
-  z-index: 2; /* sits above the dot fade overlay */
+  transform: scaleX(-1); /* face left toward the copy, matching mockup */
+  z-index: 2;
 }
 
 /* Who this is for */
@@ -1575,7 +1587,7 @@ blockquote.pull p {
 
 /* ── Global contrast fix — muted text was too light everywhere ── */
 .body-lg, .body-md, .body-sm { color: rgba(2,59,40,0.75); }
-.hero-subhead { color: rgba(2,59,40,0.62); }
+.hero-subhead { color: rgba(255,255,255,0.70); }
 .step-desc, .hiw-step-desc, .principle-body { color: rgba(2,59,40,0.75); }
 .seat-subhead, .meet-subhead { color: rgba(2,59,40,0.68); }
 .persona-quote { color: rgba(2,59,40,0.78); }
@@ -1606,14 +1618,19 @@ blockquote.pull p {
   /* Hero — stack to single column */
   .hero {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: auto;
     min-height: unset;
-  }
-  .hero-image {
-    height: clamp(280px, 70vw, 400px);
-    order: -1;
+    background: var(--evergreen);
   }
   .hero-content {
-    padding: 36px 24px 48px;
+    grid-column: 1; grid-row: 2;
+    padding: 32px 24px 44px;
+    justify-content: flex-start;
+  }
+  .hero-image {
+    grid-column: 1; grid-row: 1;
+    height: clamp(280px, 70vw, 420px);
   }
 
   /* How it works — steps grid collapses */

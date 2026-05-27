@@ -14,14 +14,14 @@ export default function Home() {
           <img src="/hero2.png" alt="Person sitting in a chair, seen from behind" />
         </div>
         <div className="hero-content">
-          <h1 className="display hero-anim-1" style={{ color: 'var(--evergreen)' }}>
+          <h1 className="display hero-anim-1" style={{ color: '#ffffff' }}>
             Design from<br />
             <span className="hero-lime-highlight">the seat</span><br />
             that matters.
           </h1>
           <p className="hero-subhead hero-anim-3">
-            Your training looks great. But what do your learners think?
-            Find out before you&apos;re in the room.
+            Pressure-test your training through real learner perspectives
+            before you go live. No more guessing.
           </p>
           <div className="hero-buttons hero-anim-4">
             <Link href="/session" className="btn-primary">Take a Seat</Link>
