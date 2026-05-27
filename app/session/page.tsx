@@ -131,7 +131,6 @@ function SessionPageInner() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [confidenceBefore, setConfidenceBefore] = useState<number | null>(null)
   const [confidenceAfter, setConfidenceAfter] = useState<number | null>(null)
-  const [confidenceAfterSaved, setConfidenceAfterSaved] = useState(false)
   const [userName, setUserName] = useState<string | null>(null)
   const [inputTab, setInputTab] = useState<'upload' | 'paste'>('upload')
   const [codeUnlocked, setCodeUnlocked] = useState(false)
@@ -1821,7 +1820,6 @@ function SessionPageInner() {
                     setSelectedPersona(null)
                     setSessionId(null)
                     setConfidenceAfter(null)
-                    setConfidenceAfterSaved(false)
                     chatInitialized.current = false
                   }}
                   style={{
@@ -1858,7 +1856,6 @@ function SessionPageInner() {
                     setSessionId(null)
                     setConfidenceBefore(null)
                     setConfidenceAfter(null)
-                    setConfidenceAfterSaved(false)
                     chatInitialized.current = false
                   }}
                   style={{
