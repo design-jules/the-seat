@@ -212,10 +212,10 @@ h3.card-title {
 .hero-content {
   grid-column: 1; grid-row: 1;
   background: transparent;
-  padding: 0 clamp(40px, 5vw, 72px);
+  padding: clamp(60px, 10vh, 120px) clamp(40px, 5vw, 72px) 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   z-index: 2;
 }
@@ -1581,6 +1581,12 @@ blockquote.pull p {
 .psa-text { color: rgba(2,59,40,0.78); }
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
+
+/* ══ RESPONSIVE — 900px: hide nav tabs before they overflow ════ */
+@media (max-width: 900px) {
+  .nav-tabs { display: none; }
+  .nav-brand { border-right: none; padding-right: 0; margin-right: 0; }
+}
 
 /* ══ RESPONSIVE — 768px and below ══════════════════════════════ */
 @media (max-width: 768px) {
