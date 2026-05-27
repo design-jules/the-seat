@@ -4,6 +4,37 @@ import { useState, useRef, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
+// Client-side file → text extraction (no upload size limits)
+async function extractTextFromFile(file: File): Promise<string> {
+  const name = file.name.toLowerCase()
+
+  if (name.endsWith('.pdf')) {
+    const pdfjs = await import('pdfjs-dist')
+    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+    const arrayBuffer = await file.arrayBuffer()
+    const pdf = await pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) }).promise
+    const pages: string[] = []
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i)
+      const content = await page.getTextContent()
+      const pageText = content.items
+        .map((item) => ('str' in item ? (item as { str: string }).str : ''))
+        .join(' ')
+      pages.push(pageText)
+    }
+    return pages.join('\n\n')
+  }
+
+  if (name.endsWith('.docx')) {
+    const mammoth = await import('mammoth')
+    const arrayBuffer = await file.arrayBuffer()
+    const result = await mammoth.extractRawText({ arrayBuffer })
+    return result.value
+  }
+
+  throw new Error('Unsupported file type. Please upload a PDF or Word doc.')
+}
+
 type Phase = 'upload' | 'scanning' | 'results' | 'chat' | 'punchlist'
 type Persona = 'skeptic' | 'slammed' | 'hype'
 
@@ -270,28 +301,8 @@ function SessionPageInner() {
     let content = ''
 
     if (uploadedFile) {
-      // Guard against Vercel's 4.5MB serverless body limit
-      if (uploadedFile.size > 4 * 1024 * 1024) {
-        setScanError('That file is a bit big (over 4MB). Try compressing it, or copy-paste the text directly using the Paste text tab.')
-        setPhase('upload')
-        return
-      }
       try {
-        const formData = new FormData()
-        formData.append('file', uploadedFile)
-        const res = await fetch('/api/extract-text', {
-          method: 'POST',
-          body: formData,
-        })
-        if (!res.ok) {
-          const msg = res.status === 413
-            ? 'That file is too large to upload. Try the Paste text tab instead.'
-            : `Upload failed (${res.status}). Try again or paste the text.`
-          throw new Error(msg)
-        }
-        const data = await res.json()
-        if (data.error) throw new Error(data.error)
-        content = data.text
+        content = await extractTextFromFile(uploadedFile)
       } catch (err) {
         setScanError(err instanceof Error ? err.message : 'Failed to extract text from file.')
         setPhase('upload')
