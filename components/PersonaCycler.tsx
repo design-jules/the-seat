@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 const PERSONAS = [
@@ -32,9 +32,12 @@ const PERSONAS = [
 
 export default function PersonaCycler() {
   const [current, setCurrent] = useState(0)
+  const pausedRef = useRef(false)
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent(p => (p + 1) % 3), 4200)
+    const t = setInterval(() => {
+      if (!pausedRef.current) setCurrent(p => (p + 1) % 3)
+    }, 4200)
     return () => clearInterval(t)
   }, [])
 
@@ -49,7 +52,11 @@ export default function PersonaCycler() {
     <div className="cycler-section">
 
       {/* Stage — cards absolutely positioned inside */}
-      <div className="cycler-stage">
+      <div
+        className="cycler-stage"
+        onMouseEnter={() => { pausedRef.current = true }}
+        onMouseLeave={() => { pausedRef.current = false }}
+      >
         {PERSONAS.map((p, i) => {
           const pos = getPos(i)
           const isActive = pos === 'active'

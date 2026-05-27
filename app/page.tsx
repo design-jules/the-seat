@@ -38,8 +38,8 @@ export default function Home() {
         <div className="section-inner">
           <Reveal>
             <div className="who-grid">
-              <p className="who-statement">Most people have <span>80% of what they need</span> to design great training. The Seat gets you to 100% of awesome.</p>
-              <p className="who-body">The Seat is for the experienced L&amp;D designer looking to uplevel their training, for the person who has never done this before, and everyone in between.</p>
+              <p className="who-statement">Great training isn&apos;t a content problem. <span>It&apos;s a perspective problem.</span></p>
+              <p className="who-body">You&apos;ve got the knowledge. You&apos;ve done the work. What you&apos;ve been missing is the view from the back of the room — before it matters. The Seat gives you that view.</p>
             </div>
           </Reveal>
         </div>

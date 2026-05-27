@@ -203,7 +203,7 @@ h3.card-title {
   display: grid;
   grid-template-columns: 46% 54%;
   grid-template-rows: 1fr;
-  height: clamp(520px, 72vh, 760px);
+  height: clamp(600px, 100vh, 940px);
   overflow: hidden;
   background: var(--evergreen);
 }
@@ -218,7 +218,6 @@ h3.card-title {
   justify-content: center;
   position: relative;
   z-index: 2;
-  max-width: 600px; /* stop content spreading too thin on giant screens */
 }
 
 .hero-content h1 {
@@ -226,7 +225,7 @@ h3.card-title {
   margin-bottom: 28px;
   line-height: 1.06;
   font-weight: 300; /* light — lets "the seat" carry the weight */
-  font-size: clamp(30px, 3.5vw, 60px); /* override global display so headline never wraps in 46% column */
+  font-size: clamp(32px, 4vw, 80px); /* override global display — grows with viewport, capped so longest line never wraps */
 }
 
 /* "the seat" — bold italic teal box */
@@ -1446,34 +1445,38 @@ blockquote.pull p {
   will-change: transform, opacity;
 }
 
-/* Active card — centered, full size, front */
+/* Active card — centered, full size, front, dramatic layered shadow */
 .cycler-card[data-pos="active"] {
   transform: translateX(-50%) scale(1);
   opacity: 1;
   z-index: 3;
   cursor: default;
-  box-shadow: 0 8px 40px rgba(2,59,40,0.13), 0 2px 8px rgba(2,59,40,0.07);
+  box-shadow:
+    0 2px 4px rgba(2,59,40,0.04),
+    0 8px 16px rgba(2,59,40,0.09),
+    0 24px 48px rgba(2,59,40,0.13),
+    0 48px 80px rgba(2,59,40,0.08);
 }
 
-/* Right peek card */
+/* Right peek card — 3D tilt away from center */
 .cycler-card[data-pos="next"] {
-  transform: translateX(calc(-50% + clamp(190px, 26vw, 310px))) scale(0.8);
-  opacity: 0.4;
+  transform: translateX(calc(-50% + clamp(190px, 26vw, 310px))) scale(0.82) perspective(900px) rotateY(-10deg);
+  opacity: 0.5;
   z-index: 2;
   cursor: pointer;
 }
 
-/* Left peek card */
+/* Left peek card — 3D tilt away from center */
 .cycler-card[data-pos="prev"] {
-  transform: translateX(calc(-50% - clamp(190px, 26vw, 310px))) scale(0.8);
-  opacity: 0.4;
+  transform: translateX(calc(-50% - clamp(190px, 26vw, 310px))) scale(0.82) perspective(900px) rotateY(10deg);
+  opacity: 0.5;
   z-index: 2;
   cursor: pointer;
 }
 
 .cycler-card[data-pos="next"]:hover,
 .cycler-card[data-pos="prev"]:hover {
-  opacity: 0.65;
+  opacity: 0.75;
 }
 
 /* Photo area inside each card */
