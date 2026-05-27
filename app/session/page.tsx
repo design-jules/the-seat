@@ -270,6 +270,12 @@ function SessionPageInner() {
     let content = ''
 
     if (uploadedFile) {
+      // Guard against Vercel's 4.5MB serverless body limit
+      if (uploadedFile.size > 4 * 1024 * 1024) {
+        setScanError('That file is a bit big (over 4MB). Try compressing it, or copy-paste the text directly using the Paste text tab.')
+        setPhase('upload')
+        return
+      }
       try {
         const formData = new FormData()
         formData.append('file', uploadedFile)
@@ -277,6 +283,12 @@ function SessionPageInner() {
           method: 'POST',
           body: formData,
         })
+        if (!res.ok) {
+          const msg = res.status === 413
+            ? 'That file is too large to upload. Try the Paste text tab instead.'
+            : `Upload failed (${res.status}). Try again or paste the text.`
+          throw new Error(msg)
+        }
         const data = await res.json()
         if (data.error) throw new Error(data.error)
         content = data.text
@@ -299,6 +311,9 @@ function SessionPageInner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ trainingContent: content }),
       })
+      if (!res.ok) {
+        throw new Error(`Analysis failed (${res.status}). Please try again.`)
+      }
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       setQuickScanResults(data)
