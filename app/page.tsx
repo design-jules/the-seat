@@ -38,7 +38,7 @@ export default function Home() {
         <div className="section-inner">
           <Reveal>
             <div className="who-grid">
-              <p className="who-statement">Great training isn&apos;t a content problem. <span>It&apos;s a perspective problem.</span></p>
+              <p className="who-statement">Great training isn&apos;t just about what you know. <span>It&apos;s about seeing it the way your learners do.</span></p>
               <p className="who-body">You&apos;ve got the knowledge. You&apos;ve done the work. What you&apos;ve been missing is the view from the back of the room — before it matters. The Seat gives you that view.</p>
             </div>
           </Reveal>
