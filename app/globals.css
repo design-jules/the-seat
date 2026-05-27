@@ -127,7 +127,7 @@ nav {
 .eyebrow-center { text-align: center; }
 
 h1.display {
-  font-size: clamp(40px, 5.5vw, 76px);
+  font-size: clamp(40px, 5.5vw, 96px);
   font-weight: 800;
   line-height: 0.97;
   letter-spacing: -0.04em;
@@ -203,7 +203,7 @@ h3.card-title {
   display: grid;
   grid-template-columns: 46% 54%;
   grid-template-rows: 1fr;
-  height: clamp(600px, 88vh, 960px);
+  height: clamp(520px, 62vh, 700px);
   overflow: hidden;
   background: var(--evergreen);
 }
