@@ -3,12 +3,6 @@ export default function Resources() {
     <main>
       <section className="section resources-section">
         <div className="section-inner">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/jazzhands.png"
-            alt="Jazz hands!"
-            style={{ width: '160px', height: 'auto', display: 'block', margin: '0 auto 24px' }}
-          />
           <p className="eyebrow eyebrow-center">Free downloads</p>
           <h2 className="display display-center" style={{ marginBottom: '12px' }}>Tools to take with you.</h2>
           <p className="resources-sub">No email required. Just useful stuff.</p>

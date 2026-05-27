@@ -724,6 +724,10 @@ function SessionPageInner() {
           .upload-zone-label:hover .upload-zone-inner { border-color: #023B28; box-shadow: 0 0 0 6px rgba(20,144,119,0.15), 0 12px 40px rgba(2,59,40,0.1); background: #f0faf7; }
           .upload-zone-label:hover .upload-zone-icon { animation: floatBob 1s ease-in-out infinite; }
           .persona-peek:hover { transform: translateY(-4px) scale(1.03); }
+          .confidence-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 100px; outline: none; cursor: pointer; }
+          .confidence-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #149077; cursor: pointer; box-shadow: 0 2px 8px rgba(20,144,119,0.4), 0 0 0 3px rgba(20,144,119,0.15); transition: box-shadow 0.15s ease; }
+          .confidence-slider::-webkit-slider-thumb:hover { box-shadow: 0 2px 14px rgba(20,144,119,0.5), 0 0 0 6px rgba(20,144,119,0.18); }
+          .confidence-slider::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #149077; cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(20,144,119,0.4); }
         `}</style>
 
         {/* Hero headline */}
@@ -955,35 +959,30 @@ function SessionPageInner() {
 
           {/* Confidence rating */}
           <div style={{ marginBottom: '28px', backgroundColor: 'rgba(2,59,40,0.04)', borderRadius: '16px', padding: '20px 24px' }}>
-            <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 14px', letterSpacing: '-0.01em' }}>
-              Before we dig in: how confident are you in this training right now?
+            <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 16px', letterSpacing: '-0.01em' }}>
+              How confident are you this training is awesome?
             </p>
-            <div style={{ overflowX: 'auto', scrollbarWidth: 'none' as const }}>
-              <div style={{ display: 'flex', gap: '6px', alignItems: 'center', minWidth: 'max-content', marginBottom: '6px' }}>
-                {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                  <button
-                    key={n}
-                    onClick={() => setConfidenceBefore(n)}
-                    style={{
-                      width: '38px', height: '38px', borderRadius: '50%', border: 'none',
-                      backgroundColor: confidenceBefore === n ? '#149077' : confidenceBefore && n <= confidenceBefore ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                      color: confidenceBefore === n ? '#fff' : '#023B28',
-                      fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                      transition: 'all 0.15s ease', flexShrink: 0,
-                      fontFamily: 'var(--font-inter-tight), sans-serif',
-                    }}
-                  >{n}</button>
-                ))}
-                {confidenceBefore !== null && (
-                  <span style={{ fontSize: '12px', color: '#149077', fontWeight: 700, marginLeft: '6px' }}>
-                    {confidenceBefore}/10
-                  </span>
-                )}
-              </div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500 }}>
-              <span>not at all</span>
-              <span>world-class</span>
+            <input
+              type="range"
+              min={1}
+              max={10}
+              step={1}
+              value={confidenceBefore ?? 5}
+              onChange={e => setConfidenceBefore(Number(e.target.value))}
+              onPointerDown={() => { if (confidenceBefore === null) setConfidenceBefore(5) }}
+              className="confidence-slider"
+              style={{
+                background: `linear-gradient(to right, #149077 0%, #149077 ${((confidenceBefore ?? 5) - 1) / 9 * 100}%, rgba(2,59,40,0.12) ${((confidenceBefore ?? 5) - 1) / 9 * 100}%, rgba(2,59,40,0.12) 100%)`,
+              }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+              <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500, maxWidth: '80px' }}>not confident</span>
+              {confidenceBefore !== null && (
+                <span style={{ fontSize: '32px', fontWeight: 800, color: '#149077', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                  {confidenceBefore}<span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(2,59,40,0.4)', letterSpacing: 0 }}>/10</span>
+                </span>
+              )}
+              <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500, maxWidth: '110px', textAlign: 'right' }}>have never believed in anything more!</span>
             </div>
           </div>
 
@@ -1739,44 +1738,44 @@ function SessionPageInner() {
                 Now that you&rsquo;ve seen the list: how are you feeling about this training?
               </p>
               {confidenceBefore !== null && (
-                <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.45)', margin: '0 0 14px' }}>
+                <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.45)', margin: '0 0 16px' }}>
                   You rated it {confidenceBefore}/10 before. Let&rsquo;s see if that moved.
                 </p>
               )}
-              <div style={{ overflowX: 'auto', scrollbarWidth: 'none' as const }}>
-                <div style={{ display: 'flex', gap: '6px', alignItems: 'center', minWidth: 'max-content', marginBottom: '6px' }}>
-                  {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                    <button
-                      key={n}
-                      onClick={async () => {
-                        setConfidenceAfter(n)
-                        if (sessionId && !confidenceAfterSaved) {
-                          setConfidenceAfterSaved(true)
-                          await saveConfidenceAfter(sessionId, n)
-                        }
-                      }}
-                      style={{
-                        width: '38px', height: '38px', borderRadius: '50%', border: 'none',
-                        backgroundColor: confidenceAfter === n ? '#149077' : confidenceAfter && n <= confidenceAfter ? 'rgba(20,144,119,0.15)' : 'rgba(2,59,40,0.08)',
-                        color: confidenceAfter === n ? '#fff' : '#023B28',
-                        fontSize: '13px', fontWeight: 700, cursor: 'pointer',
-                        transition: 'all 0.15s ease', flexShrink: 0,
-                        fontFamily: 'var(--font-inter-tight), sans-serif',
-                      }}
-                    >{n}</button>
-                  ))}
-                  {confidenceAfter !== null && confidenceBefore !== null && (
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: confidenceAfter >= confidenceBefore ? '#149077' : 'rgba(2,59,40,0.5)', marginLeft: '8px' }}>
-                      {confidenceAfter > confidenceBefore ? `↑ up ${confidenceAfter - confidenceBefore} from before` :
-                       confidenceAfter < confidenceBefore ? `↓ down ${confidenceBefore - confidenceAfter}` :
-                       'same as before'}
+              <input
+                type="range"
+                min={1}
+                max={10}
+                step={1}
+                value={confidenceAfter ?? 5}
+                onChange={e => setConfidenceAfter(Number(e.target.value))}
+                onPointerDown={() => { if (confidenceAfter === null) setConfidenceAfter(5) }}
+                onPointerUp={async (e) => {
+                  const val = Number((e.target as HTMLInputElement).value)
+                  if (sessionId) await saveConfidenceAfter(sessionId, val)
+                }}
+                className="confidence-slider"
+                style={{
+                  background: `linear-gradient(to right, #149077 0%, #149077 ${((confidenceAfter ?? 5) - 1) / 9 * 100}%, rgba(2,59,40,0.12) ${((confidenceAfter ?? 5) - 1) / 9 * 100}%, rgba(2,59,40,0.12) 100%)`,
+                }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500, maxWidth: '80px' }}>not confident</span>
+                {confidenceAfter !== null && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                    <span style={{ fontSize: '32px', fontWeight: 800, color: '#149077', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                      {confidenceAfter}<span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(2,59,40,0.4)', letterSpacing: 0 }}>/10</span>
                     </span>
-                  )}
-                </div>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500 }}>
-                <span>not at all</span>
-                <span>world-class</span>
+                    {confidenceBefore !== null && (
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: confidenceAfter >= confidenceBefore ? '#149077' : 'rgba(2,59,40,0.5)' }}>
+                        {confidenceAfter > confidenceBefore ? `↑ up ${confidenceAfter - confidenceBefore} from before` :
+                         confidenceAfter < confidenceBefore ? `↓ down ${confidenceBefore - confidenceAfter}` :
+                         'same as before'}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.4)', fontWeight: 500, maxWidth: '110px', textAlign: 'right' }}>have never believed in anything more!</span>
               </div>
             </div>
           )}
