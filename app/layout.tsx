@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter_Tight } from "next/font/google";
 import "./globals.css";
 import NavWrapper from "@/components/NavWrapper";
+import Footer from "@/components/Footer";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={`${interTight.variable} antialiased`}>
         <NavWrapper />
         {children}
+        <Footer />
       </body>
     </html>
   );

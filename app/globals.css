@@ -1582,6 +1582,38 @@ blockquote.pull p {
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
 
+/* ── Site footer ─────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid rgba(2,59,40,0.1);
+  padding: 24px 32px;
+  background: #FDFAF7;
+}
+.site-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: var(--font-inter-tight), sans-serif;
+  font-size: 13px;
+  color: rgba(2,59,40,0.45);
+  font-weight: 500;
+}
+.site-footer-copy { margin: 0; }
+.site-footer-links a {
+  color: rgba(2,59,40,0.45);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.site-footer-links a:hover { color: #023B28; }
+@media (max-width: 480px) {
+  .site-footer-inner { flex-direction: column; text-align: center; }
+  .site-footer { padding: 20px 24px; }
+}
+
 /* ── Confidence slider ──────────────────────────────────────── */
 .confidence-slider {
   -webkit-appearance: none;
