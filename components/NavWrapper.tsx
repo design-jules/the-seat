@@ -26,7 +26,7 @@ export default function NavWrapper() {
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <Image
-            src="/newlogo.png"
+            src="/newlogo_dark.png"
             alt="The Seat"
             width={86}
             height={44}

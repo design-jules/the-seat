@@ -203,7 +203,7 @@ h3.card-title {
   display: grid;
   grid-template-columns: 46% 54%;
   grid-template-rows: 1fr;
-  height: clamp(600px, 100vh, 940px);
+  height: clamp(540px, 72vh, 800px);
   overflow: hidden;
   background: var(--evergreen);
 }
@@ -212,7 +212,7 @@ h3.card-title {
 .hero-content {
   grid-column: 1; grid-row: 1;
   background: transparent;
-  padding: clamp(60px, 10vh, 120px) clamp(40px, 5vw, 72px) 0;
+  padding: clamp(48px, 8vh, 100px) clamp(40px, 5vw, 72px) 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -225,7 +225,7 @@ h3.card-title {
   margin-bottom: 28px;
   line-height: 1.06;
   font-weight: 300; /* light — lets "the seat" carry the weight */
-  font-size: clamp(32px, 4vw, 80px); /* override global display — grows with viewport, capped so longest line never wraps */
+  font-size: clamp(36px, 5.5vw, 88px); /* bigger — fills left column, reduces dead space below */
 }
 
 /* "the seat" — bold italic teal box */
