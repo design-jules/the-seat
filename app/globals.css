@@ -212,7 +212,7 @@ h3.card-title {
 .hero-content {
   grid-column: 1; grid-row: 1;
   background: transparent;
-  padding: clamp(56px, 7vw, 96px) clamp(40px, 5vw, 72px);
+  padding: 0 clamp(40px, 5vw, 72px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -226,6 +226,7 @@ h3.card-title {
   margin-bottom: 28px;
   line-height: 1.06;
   font-weight: 300; /* light — lets "the seat" carry the weight */
+  font-size: clamp(30px, 3.5vw, 60px); /* override global display so headline never wraps in 46% column */
 }
 
 /* "the seat" — bold italic teal box */
@@ -1205,7 +1206,7 @@ blockquote.pull p {
 .problem-section p em { font-style: italic; color: var(--jungle); font-weight: 500; }
 
 /* Meet Your Learners */
-.meet-section { background: var(--cream); }
+.meet-section { background: var(--cream); padding-bottom: 0; }
 .meet-headline {
   font-size: clamp(28px, 3.5vw, 44px);
   font-weight: 800;
@@ -1415,7 +1416,7 @@ blockquote.pull p {
 /* ── Peek Carousel (PersonaCycler) ──────────────────────────── */
 .cycler-section {
   background: var(--cream);
-  padding: clamp(20px,3vw,36px) 0 clamp(24px,3vw,40px);
+  padding: 0 0 clamp(24px,3vw,40px);
   overflow: hidden;
 }
 
