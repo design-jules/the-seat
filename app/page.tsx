@@ -11,7 +11,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero-image hero-image-anim">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero2.png" alt="Person sitting in a chair, seen from behind" />
+          <img src="/hero3.png" alt="Person sitting in a chair" style={{ mixBlendMode: 'multiply' }} />
         </div>
         <div className="hero-content">
           <h1 className="display hero-anim-1" style={{ color: '#ffffff' }}>
