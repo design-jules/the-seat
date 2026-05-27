@@ -134,6 +134,10 @@ function SessionPageInner() {
   const [confidenceAfterSaved, setConfidenceAfterSaved] = useState(false)
   const [userName, setUserName] = useState<string | null>(null)
   const [inputTab, setInputTab] = useState<'upload' | 'paste'>('upload')
+  const [codeUnlocked, setCodeUnlocked] = useState(false)
+  const [inlineCode, setInlineCode] = useState('')
+  const [inlineCodeError, setInlineCodeError] = useState<string | null>(null)
+  const [inlineCodeLoading, setInlineCodeLoading] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -179,6 +183,12 @@ function SessionPageInner() {
     })
   }, [])
 
+  // Sync code-unlock state from sessionStorage on mount
+  useEffect(() => {
+    const stored = sessionStorage.getItem('the-seat-access')
+    if (stored) setCodeUnlocked(true)
+  }, [])
+
   // Prevent browser from opening dragged files as a new page
   useEffect(() => {
     const prevent = (e: DragEvent) => { e.preventDefault() }
@@ -189,6 +199,30 @@ function SessionPageInner() {
       document.removeEventListener('drop', prevent)
     }
   }, [])
+
+  const handleInlineCode = async () => {
+    if (!inlineCode.trim()) return
+    setInlineCodeLoading(true)
+    setInlineCodeError(null)
+    try {
+      const res = await fetch('/api/validate-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: inlineCode }),
+      })
+      const data = await res.json()
+      if (data.valid) {
+        sessionStorage.setItem('the-seat-access', 'code')
+        setCodeUnlocked(true)
+      } else {
+        setInlineCodeError(data.message || "That code didn't work. Try again?")
+        setInlineCodeLoading(false)
+      }
+    } catch {
+      setInlineCodeError('Something went wrong. Try again.')
+      setInlineCodeLoading(false)
+    }
+  }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -735,6 +769,60 @@ function SessionPageInner() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ── Beta access banner ───────────────────────────────── */}
+        <div style={{ maxWidth: '720px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 40px) 20px', animation: 'fadeUp 0.5s 0.15s ease both' }}>
+          {codeUnlocked ? (
+            <div style={{ backgroundColor: 'rgba(20,144,119,0.08)', border: '1px solid rgba(20,144,119,0.2)', borderRadius: '12px', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '15px' }}>✓</span>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: '#149077' }}>Access unlocked — you&apos;re in.</span>
+            </div>
+          ) : (
+            <div style={{ backgroundColor: '#023B28', borderRadius: '16px', padding: '20px 24px' }}>
+              <p style={{ color: '#FDFAF7', fontWeight: 700, fontSize: '14px', margin: '0 0 4px' }}>
+                Beta access required
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', margin: '0 0 14px' }}>
+                Got a code? Enter it below to unlock The Seat.
+              </p>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <input
+                  value={inlineCode}
+                  onChange={e => { setInlineCode(e.target.value.toUpperCase()); setInlineCodeError(null) }}
+                  onKeyDown={e => e.key === 'Enter' && handleInlineCode()}
+                  placeholder="ENTER CODE"
+                  style={{
+                    flex: 1, minWidth: '140px', padding: '11px 18px', borderRadius: '100px',
+                    border: `2px solid ${inlineCodeError ? '#fca5a5' : 'rgba(255,255,255,0.15)'}`,
+                    background: 'rgba(255,255,255,0.08)', color: '#fff',
+                    fontSize: '14px', fontWeight: 700, letterSpacing: '0.08em',
+                    fontFamily: 'var(--font-inter-tight), sans-serif', outline: 'none',
+                  }}
+                />
+                <button
+                  onClick={handleInlineCode}
+                  disabled={inlineCodeLoading || !inlineCode.trim()}
+                  style={{
+                    backgroundColor: inlineCode.trim() ? '#c4ff00' : 'rgba(255,255,255,0.12)',
+                    color: inlineCode.trim() ? '#023B28' : 'rgba(255,255,255,0.3)',
+                    border: 'none', borderRadius: '100px', padding: '11px 24px',
+                    fontSize: '14px', fontWeight: 800,
+                    fontFamily: 'var(--font-inter-tight), sans-serif',
+                    cursor: inlineCode.trim() && !inlineCodeLoading ? 'pointer' : 'not-allowed',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {inlineCodeLoading ? '...' : 'Unlock →'}
+                </button>
+              </div>
+              {inlineCodeError && (
+                <p style={{ color: '#fca5a5', fontSize: '13px', fontWeight: 500, margin: '8px 0 0' }}>
+                  {inlineCodeError}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Upload form */}
