@@ -18,7 +18,7 @@ const PERSONAS = [
     image: '/the_hype2.png',
     accent: '#149077',
     accentText: '#fff',
-    quote: 'Wow that was such a fun class, but no idea what to do now.',
+    quote: 'Fun class — but now what?',
   },
   {
     id: 'slammed',
@@ -38,9 +38,6 @@ export default function PersonaCycler() {
     return () => clearInterval(t)
   }, [])
 
-  const active = PERSONAS[current]
-
-  // Compute position label for each card (stays with the DOM node for smooth CSS transitions)
   const getPos = (i: number) => {
     const rel = (i - current + 3) % 3
     if (rel === 0) return 'active'
@@ -64,6 +61,15 @@ export default function PersonaCycler() {
               onClick={() => !isActive && setCurrent(i)}
               aria-label={isActive ? undefined : `View ${p.label}`}
             >
+              {/* Speech bubble */}
+              <div
+                className="cycler-card-bubble"
+                style={{ background: p.accent, color: p.accentText }}
+              >
+                &ldquo;{p.quote}&rdquo;
+                <div className="cycler-bubble-tail" style={{ background: p.accent }} />
+              </div>
+
               <div className="cycler-card-photo">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.image} alt={p.label} style={{ mixBlendMode: 'multiply' }} />
@@ -79,20 +85,13 @@ export default function PersonaCycler() {
         })}
       </div>
 
-      {/* Quote — changes with active persona */}
-      <div className="cycler-quote-row">
-        <blockquote className="cycler-quote" key={current}>
-          &ldquo;{active.quote}&rdquo;
-        </blockquote>
-      </div>
-
       {/* Dot nav */}
       <div className="cycler-dots">
         {PERSONAS.map((_, i) => (
           <button
             key={i}
             className={`cycler-dot${i === current ? ' cycler-dot-on' : ''}`}
-            style={{ background: i === current ? active.accent : 'rgba(2,59,40,0.18)' }}
+            style={{ background: i === current ? PERSONAS[i].accent : 'rgba(2,59,40,0.18)' }}
             onClick={() => setCurrent(i)}
             aria-label={`View ${PERSONAS[i].label}`}
           />
