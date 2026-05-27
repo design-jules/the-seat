@@ -87,7 +87,7 @@ export default function Nav() {
           <Image
             src="/newlogo.png"
             alt="The Seat"
-            width={130}
+            width={86}
             height={44}
             style={{ objectFit: 'contain', display: 'block' }}
             priority

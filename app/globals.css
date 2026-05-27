@@ -1612,13 +1612,15 @@ blockquote.pull p {
   }
   .hero-image {
     grid-column: 1; grid-row: 1;
-    height: 75vw;
-    min-height: 280px;
-    max-height: 480px;
+    height: 115vw;
+    min-height: 300px;
+    max-height: 500px;
   }
   .hero-image img {
-    height: 100%;
-    width: auto;
+    width: 85%;
+    height: auto;
+    position: absolute;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%) scaleX(-1);
   }
