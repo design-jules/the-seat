@@ -203,12 +203,12 @@ h3.card-title {
   display: grid;
   grid-template-columns: 46% 54%;
   grid-template-rows: 1fr;
-  height: clamp(520px, 62vh, 700px);
+  height: clamp(520px, 72vh, 760px);
   overflow: hidden;
   background: var(--evergreen);
 }
 
-/* Left column — copy, vertically centered */
+/* Left column — copy, vertically centered, bounded on large screens */
 .hero-content {
   grid-column: 1; grid-row: 1;
   background: transparent;
@@ -218,6 +218,7 @@ h3.card-title {
   justify-content: center;
   position: relative;
   z-index: 2;
+  max-width: 600px; /* stop content spreading too thin on giant screens */
 }
 
 .hero-content h1 {
@@ -282,13 +283,13 @@ h3.card-title {
 
 .hero-image img {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(-1); /* centered + facing left */
   height: 100%;
-  object-fit: cover;
-  object-position: 28% top; /* keeps her face + body visible, zoomed in */
+  width: auto;
+  max-width: none;
   display: block;
-  transform: scaleX(-1);
   z-index: 2;
 }
 
@@ -1615,8 +1616,10 @@ blockquote.pull p {
     max-height: 480px;
   }
   .hero-image img {
-    object-position: 30% 15%; /* zoom into her face/body on mobile */
-    transform: scaleX(-1);
+    height: 100%;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%) scaleX(-1);
   }
   .hero-image::before { display: none; } /* hide orbs on mobile */
   .hero-content {
