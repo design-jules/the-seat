@@ -724,10 +724,6 @@ function SessionPageInner() {
           .upload-zone-label:hover .upload-zone-inner { border-color: #023B28; box-shadow: 0 0 0 6px rgba(20,144,119,0.15), 0 12px 40px rgba(2,59,40,0.1); background: #f0faf7; }
           .upload-zone-label:hover .upload-zone-icon { animation: floatBob 1s ease-in-out infinite; }
           .persona-peek:hover { transform: translateY(-4px) scale(1.03); }
-          .confidence-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 100px; outline: none; cursor: pointer; }
-          .confidence-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #149077; cursor: pointer; box-shadow: 0 2px 8px rgba(20,144,119,0.4), 0 0 0 3px rgba(20,144,119,0.15); transition: box-shadow 0.15s ease; }
-          .confidence-slider::-webkit-slider-thumb:hover { box-shadow: 0 2px 14px rgba(20,144,119,0.5), 0 0 0 6px rgba(20,144,119,0.18); }
-          .confidence-slider::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #149077; cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(20,144,119,0.4); }
         `}</style>
 
         {/* Hero headline */}
