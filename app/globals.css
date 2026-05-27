@@ -223,7 +223,7 @@ h3.card-title {
 .hero-content h1 {
   color: #ffffff;
   margin-bottom: 28px;
-  line-height: 1.06;
+  line-height: 1.14;
   font-weight: 300; /* light — lets "the seat" carry the weight */
   font-size: clamp(36px, 5.5vw, 88px); /* bigger — fills left column, reduces dead space below */
 }
@@ -233,11 +233,11 @@ h3.card-title {
   background: #149077;
   color: #ffffff;
   border-radius: 6px;
-  padding: 0 10px 4px;
+  padding: 2px 10px 3px;
   display: inline-block;
-  margin-top: 2px;
   font-style: italic;
   font-weight: 800;
+  vertical-align: baseline;
 }
 
 /* Primary button — lime filled, pill shape */
@@ -1582,10 +1582,62 @@ blockquote.pull p {
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
 
+/* ── Mobile nav hamburger + dropdown ───────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  color: rgba(253,250,247,0.9);
+  font-size: 22px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.nav-hamburger:hover { background: rgba(255,255,255,0.1); }
+
+.nav-mobile-menu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: var(--evergreen);
+  z-index: 98;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+.nav-mobile-link {
+  color: rgba(253,250,247,0.85);
+  text-decoration: none;
+  font-family: var(--font-inter-tight), sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: block;
+  transition: color 0.15s;
+}
+.nav-mobile-link:last-child { border-bottom: none; }
+.nav-mobile-link:hover { color: #ffffff; }
+.nav-mobile-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 8px 0;
+}
+
 /* ══ RESPONSIVE — 900px: hide nav tabs before they overflow ════ */
 @media (max-width: 900px) {
   .nav-tabs { display: none; }
   .nav-brand { border-right: none; padding-right: 0; margin-right: 0; }
+  .nav-hamburger { display: flex; }
+  .btn-signup-nav { display: none; }
 }
 
 /* ══ RESPONSIVE — 768px and below ══════════════════════════════ */

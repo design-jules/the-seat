@@ -24,7 +24,7 @@ export default function Home() {
             before you go live. No more guessing.
           </p>
           <div className="hero-buttons hero-anim-4">
-            <Link href="/session" className="btn-primary">Take a Seat</Link>
+            <Link href="/session" className="btn-primary">Take a seat</Link>
             <Link href="/how-it-works" className="btn-outline">See how it works</Link>
           </div>
         </div>

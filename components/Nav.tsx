@@ -21,6 +21,7 @@ export default function Nav() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [showSignInDropdown, setShowSignInDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [signInEmail, setSignInEmail] = useState('');
   const [signInPassword, setSignInPassword] = useState('');
   const [signInError, setSignInError] = useState<string | null>(null);
@@ -81,6 +82,7 @@ export default function Nav() {
   const firstName = user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || null;
 
   return (
+    <>
     <nav>
       <div className="nav-left">
         <Link href="/" className="nav-brand">
@@ -106,6 +108,14 @@ export default function Nav() {
         </div>
       </div>
       <div className="nav-right">
+        {/* Hamburger — only visible at ≤900px */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setShowMobileMenu(prev => !prev)}
+          aria-label="Toggle menu"
+        >
+          {showMobileMenu ? '✕' : '☰'}
+        </button>
         {user && (
           <Link href="/sessions" className="nav-tab" style={{ borderBottom: 'none', fontSize: '13px' }}>
             My Sessions
@@ -219,5 +229,46 @@ export default function Nav() {
         )}
       </div>
     </nav>
+
+    {/* Mobile nav dropdown — slides in below nav at ≤900px */}
+    {showMobileMenu && (
+      <div className="nav-mobile-menu">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="nav-mobile-link"
+            onClick={() => setShowMobileMenu(false)}
+          >
+            {link.label}
+          </Link>
+        ))}
+        {user && (
+          <Link href="/sessions" className="nav-mobile-link" onClick={() => setShowMobileMenu(false)}>
+            My Sessions
+          </Link>
+        )}
+        <div className="nav-mobile-divider" />
+        {user ? (
+          <button
+            className="nav-mobile-link"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit', padding: 0, width: '100%' }}
+            onClick={() => { handleSignOut(); setShowMobileMenu(false); }}
+          >
+            Sign out ({firstName})
+          </button>
+        ) : (
+          <>
+            <Link href="/contact" className="nav-mobile-link" onClick={() => setShowMobileMenu(false)}>
+              Sign Up
+            </Link>
+            <Link href="#" className="nav-mobile-link" onClick={(e) => { e.preventDefault(); setShowMobileMenu(false); setShowSignInDropdown(true); }}>
+              Sign In
+            </Link>
+          </>
+        )}
+      </div>
+    )}
+    </>
   );
 }
