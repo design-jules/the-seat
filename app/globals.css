@@ -223,7 +223,7 @@ h3.card-title {
 .hero-content h1 {
   color: #ffffff;
   margin-bottom: 28px;
-  line-height: 1.14;
+  line-height: 1.22;
   font-weight: 300; /* light — lets "the seat" carry the weight */
   font-size: clamp(36px, 5.5vw, 88px); /* bigger — fills left column, reduces dead space below */
 }
