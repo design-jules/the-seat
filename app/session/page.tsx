@@ -164,6 +164,7 @@ function SessionPageInner() {
   const [confidenceAfter, setConfidenceAfter] = useState<number | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
   const [inputTab, setInputTab] = useState<'upload' | 'paste'>('upload')
+  const [isListening, setIsListening] = useState(false)
   const [codeUnlocked, setCodeUnlocked] = useState(false)
   const [inlineCode, setInlineCode] = useState('')
   const [inlineCodeError, setInlineCodeError] = useState<string | null>(null)
@@ -252,6 +253,24 @@ function SessionPageInner() {
       setInlineCodeError('Something went wrong. Try again.')
       setInlineCodeLoading(false)
     }
+  }
+
+  const handleMicClick = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SR) return
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const recognition = new SR() as any
+    recognition.lang = 'en-US'
+    recognition.interimResults = false
+    recognition.onstart = () => setIsListening(true)
+    recognition.onend = () => setIsListening(false)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (e: any) => {
+      const transcript = e.results[0][0].transcript
+      setPastedText((prev: string) => prev ? `${prev} ${transcript}` : transcript)
+    }
+    recognition.start()
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -959,6 +978,29 @@ function SessionPageInner() {
                   onFocus={e => { e.target.style.borderColor = '#149077'; e.target.style.boxShadow = '0 0 0 3px rgba(20,144,119,0.1)' }}
                   onBlur={e => { e.target.style.borderColor = 'rgba(2,59,40,0.12)'; e.target.style.boxShadow = 'none' }}
                 />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
+                  <button
+                    onClick={handleMicClick}
+                    title={isListening ? 'Listening...' : 'Speak your training content'}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '6px',
+                      background: isListening ? 'rgba(220,38,38,0.08)' : 'rgba(20,144,119,0.08)',
+                      border: `1.5px solid ${isListening ? 'rgba(220,38,38,0.3)' : 'rgba(20,144,119,0.25)'}`,
+                      borderRadius: '100px', padding: '7px 14px',
+                      cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                      color: isListening ? '#dc2626' : '#149077',
+                      fontFamily: 'var(--font-inter-tight), sans-serif',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                      <rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/>
+                      <path d="M5 10a7 7 0 0 0 14 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <line x1="12" y1="20" x2="12" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    {isListening ? 'Listening...' : 'Speak it instead'}
+                  </button>
+                </div>
                 {pastedText.trim().length > 0 && pastedText.trim().length < 200 && (
                   <p style={{ fontSize: '13px', color: 'rgba(232,145,58,0.9)', marginTop: '8px', marginBottom: 0, fontWeight: 500 }}>
                     The more detail you give, the more honest the reactions will be.
@@ -1205,21 +1247,63 @@ function SessionPageInner() {
     const config = PERSONA_CONFIG[selectedPersona]
     return (
       <div style={{
-        height: '100vh',
+        height: '100dvh',
         display: 'flex',
         fontFamily: 'var(--font-inter-tight), sans-serif',
         backgroundColor: '#FDFAF7',
         overflow: 'hidden',
       }}>
-        {/* Left sidebar */}
-        <div style={{
-          width: '320px',
-          flexShrink: 0,
+        <style>{`
+          .chat-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(2,59,40,0.08);
+          }
+          .chat-mobile-bar { display: none; }
+          @media (max-width: 768px) {
+            .chat-sidebar { display: none; }
+            .chat-mobile-bar {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 10px 16px;
+              border-bottom: 1px solid rgba(2,59,40,0.08);
+              background: #FDFAF7;
+              gap: 10px;
+              flex-shrink: 0;
+            }
+            .chat-messages { padding: 16px !important; }
+            .chat-input-area { padding: 12px 16px !important; }
+          }
+        `}</style>
+
+        {/* Mobile-only top bar */}
+        <div className="chat-mobile-bar" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: config.bg, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={config.image} alt={config.name} style={{ position: 'absolute', bottom: '-2px', left: '50%', transform: 'translateX(-50%)', height: '34px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+            </div>
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#023B28', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>{config.name}</span>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+            <button onClick={() => { setPhase('results'); setMessages([]); setExchangeCount(0); chatInitialized.current = false; }}
+              style={{ background: 'none', border: '1.5px solid rgba(2,59,40,0.2)', borderRadius: '100px', padding: '6px 12px', fontSize: '12px', fontWeight: 600, color: '#023B28', cursor: 'pointer', fontFamily: 'inherit' }}>
+              Switch
+            </button>
+            <button onClick={handleGetPunchlist} disabled={messages.length < 2}
+              style={{ background: messages.length >= 2 ? '#023B28' : 'rgba(2,59,40,0.15)', color: messages.length >= 2 ? '#FDFAF7' : 'rgba(2,59,40,0.3)', border: 'none', borderRadius: '100px', padding: '6px 14px', fontSize: '12px', fontWeight: 700, cursor: messages.length >= 2 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
+              Get my list →
+            </button>
+          </div>
+        </div>
+
+        {/* Left sidebar — desktop only */}
+        <div className="chat-sidebar" style={{
           backgroundColor: config.bg,
           padding: '40px 28px',
-          display: 'flex',
-          flexDirection: 'column',
-          borderRight: '1px solid rgba(2, 59, 40, 0.08)',
         }}>
           <div style={{ flex: 1 }}>
             <div style={{ height: '160px', position: 'relative', overflow: 'hidden', borderRadius: '16px', backgroundColor: config.bg, marginBottom: '20px' }}>
@@ -1346,7 +1430,7 @@ function SessionPageInner() {
           </div>
 
           {/* Messages */}
-          <div style={{
+          <div className="chat-messages" style={{
             flex: 1,
             overflowY: 'auto',
             padding: '32px',
@@ -1478,7 +1562,7 @@ function SessionPageInner() {
           </div>
 
           {/* Input area */}
-          <div style={{
+          <div className="chat-input-area" style={{
             padding: '20px 32px',
             borderTop: '1px solid rgba(2, 59, 40, 0.08)',
             display: 'flex',
