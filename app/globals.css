@@ -1582,6 +1582,17 @@ blockquote.pull p {
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
 
+/* ── Persona results grid (session page) ───────────────────────── */
+.persona-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 72px;
+}
+@media (max-width: 600px) {
+  .persona-results-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Site footer ─────────────────────────────────────────────── */
 .site-footer {
   border-top: 1px solid rgba(2,59,40,0.1);
