@@ -1092,6 +1092,18 @@ blockquote.pull p {
   white-space: nowrap;
   flex-shrink: 0;
 }
+.resources-coming-pill-big {
+  display: inline-block;
+  background: linear-gradient(135deg, #b67be0, #8a4fc7);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 10px 20px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(140,60,200,0.3);
+}
 
 /* CONTACT */
 .contact-section {

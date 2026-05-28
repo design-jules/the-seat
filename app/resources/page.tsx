@@ -13,17 +13,22 @@ export default function Resources() {
             <div className="resource-card">
               <div className="resource-cover resource-cover-checklist">
                 <span className="resource-cover-brand">The Seat</span>
-                <div>
-                  <div className="resource-cover-title">Before You<br />Take a Seat</div>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/resources/before-you-take-a-seat-preview.png"
+                    alt="Before You Take a Seat checklist preview"
+                    style={{ height: '155px', borderRadius: '4px', boxShadow: '0 10px 28px rgba(0,0,0,0.35)', transform: 'rotate(-2deg)' }}
+                  />
                 </div>
                 <span className="resource-cover-tag tag-checklist">Checklist</span>
               </div>
               <div className="resource-body">
                 <h3>Before You Take a Seat</h3>
-                <p>At some point, every L&amp;D person has sat in a review meeting thinking &ldquo;how did we get here.&rdquo; And every leader has thought the exact same thing from the other side of the table. Most of those fixes? They could have happened before anyone took a seat. This is how you make sure they do.</p>
+                <p>You know that moment in a review when someone flags something you could have caught at your desk? This checklist is the thing you run before that. Short, specific, and worth the five minutes.</p>
                 <p style={{ fontSize: '13px', fontWeight: 600, marginBottom: '16px', marginTop: '-4px' }}>
-                  Leaders: share this checklist with your team.<br />
-                  Designers: tick these off before you share.
+                  Designers: tick these off before you share.<br />
+                  Leaders: send it to your team.
                 </p>
                 <a href="/resources/before-you-take-a-seat.pdf" download className="btn-download">↓ Download PDF</a>
               </div>
@@ -41,7 +46,7 @@ export default function Resources() {
               <div className="resource-body">
                 <h3>Sparkle Dust Starter Kit</h3>
                 <p>Ideas for engagement moments: analogies, games, ice breakers. Includes the World&apos;s Best Ice Breakers and more.</p>
-                <div className="resources-coming-pill" style={{ display: 'inline-block', marginTop: '4px' }}>Coming soon</div>
+                <div className="resources-coming-pill resources-coming-pill-big" style={{ marginTop: '8px' }}>✨ Coming soon!</div>
               </div>
             </div>
 
