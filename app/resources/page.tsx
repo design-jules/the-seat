@@ -11,17 +11,18 @@ export default function Resources() {
 
             {/* Before You Take a Seat */}
             <div className="resource-card">
-              <div className="resource-cover resource-cover-checklist">
-                <span className="resource-cover-brand">The Seat</span>
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: '220px', height: '160px', overflow: 'hidden', borderRadius: '6px', boxShadow: '0 12px 32px rgba(0,0,0,0.4)', transform: 'rotate(-1.5deg)' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/resources/before-you-take-a-seat-preview.png"
-                      alt="Before You Take a Seat checklist preview"
-                      style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top' }}
-                    />
-                  </div>
+              <div className="resource-cover resource-cover-checklist" style={{ justifyContent: 'flex-end' }}>
+                {/* PDF thumbnail peeking from top-right */}
+                <div style={{ position: 'absolute', top: '-10px', right: '24px', width: '130px', height: '190px', overflow: 'hidden', borderRadius: '5px', boxShadow: '0 12px 32px rgba(2,59,40,0.22)', transform: 'rotate(2deg)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/resources/before-you-take-a-seat-preview.png"
+                    alt="Before You Take a Seat checklist preview"
+                    style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top' }}
+                  />
+                </div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div className="resource-cover-title" style={{ color: '#023B28', maxWidth: '55%' }}>Before You<br />Take a Seat</div>
                 </div>
                 <span className="resource-cover-tag tag-checklist">Checklist</span>
               </div>
@@ -39,7 +40,6 @@ export default function Resources() {
             {/* Sparkle Dust Starter Kit — coming soon */}
             <div className="resource-card resource-card-soon">
               <div className="resource-cover resource-cover-sparkle">
-                <span className="resource-cover-brand">The Seat</span>
                 <div>
                   <div className="resource-cover-title">Sparkle Dust<br />Starter Kit</div>
                 </div>
