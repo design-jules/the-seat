@@ -1175,12 +1175,11 @@ function SessionPageInner() {
             Here&rsquo;s what your learners are actually thinking.
           </h2>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '24px',
-            marginBottom: '72px',
-          }}>
+          <style>{`
+            .persona-results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 72px; }
+            @media (max-width: 600px) { .persona-results-grid { grid-template-columns: 1fr; } }
+          `}</style>
+          <div className="persona-results-grid">
             {personas.map(persona => {
               const config = PERSONA_CONFIG[persona]
               return (
