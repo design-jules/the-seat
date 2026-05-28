@@ -14,12 +14,14 @@ export default function Resources() {
               <div className="resource-cover resource-cover-checklist">
                 <span className="resource-cover-brand">The Seat</span>
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/resources/before-you-take-a-seat-preview.png"
-                    alt="Before You Take a Seat checklist preview"
-                    style={{ height: '155px', borderRadius: '4px', boxShadow: '0 10px 28px rgba(0,0,0,0.35)', transform: 'rotate(-2deg)' }}
-                  />
+                  <div style={{ width: '220px', height: '160px', overflow: 'hidden', borderRadius: '6px', boxShadow: '0 12px 32px rgba(0,0,0,0.4)', transform: 'rotate(-1.5deg)' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/resources/before-you-take-a-seat-preview.png"
+                      alt="Before You Take a Seat checklist preview"
+                      style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top' }}
+                    />
+                  </div>
                 </div>
                 <span className="resource-cover-tag tag-checklist">Checklist</span>
               </div>
