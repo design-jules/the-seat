@@ -10,22 +10,52 @@ export async function POST(request: NextRequest) {
 
     const supabase = createClient()
 
-    // Check code exists (no used_at check — codes are reusable)
+    // Look up the code — include email so we can check if it's already claimed
     const { data, error } = await supabase
       .from('access_codes')
-      .select('id')
+      .select('id, email')
       .eq('code', code.trim().toUpperCase())
       .single()
 
-    if (error || !data) return NextResponse.json({ valid: false, message: 'Code not found.' })
+    if (error || !data) {
+      return NextResponse.json({ valid: false, message: "That code didn't work. Try again?" })
+    }
 
-    // If a user is signed in, save them as permanently approved
     const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
+
+    // Code is already claimed — check if it belongs to this user
+    if (data.email) {
+      if (!user || user.email !== data.email) {
+        return NextResponse.json({
+          valid: false,
+          message: 'This code has already been claimed by another account.',
+        })
+      }
+      // Same user re-entering their own code — just re-approve and move on
       await supabase
         .from('approved_users')
         .upsert({ user_id: user.id, approved_via: 'code' }, { onConflict: 'user_id' })
+      return NextResponse.json({ valid: true })
     }
+
+    // Code is unclaimed — require a logged-in account to activate it
+    if (!user) {
+      return NextResponse.json({
+        valid: false,
+        requiresLogin: true,
+        message: 'Sign in first — codes are tied to your account so only you can use it.',
+      })
+    }
+
+    // Claim the code to this user and grant permanent access
+    await supabase
+      .from('access_codes')
+      .update({ email: user.email, used_at: new Date().toISOString() })
+      .eq('id', data.id)
+
+    await supabase
+      .from('approved_users')
+      .upsert({ user_id: user.id, approved_via: 'code' }, { onConflict: 'user_id' })
 
     return NextResponse.json({ valid: true })
   } catch (error) {

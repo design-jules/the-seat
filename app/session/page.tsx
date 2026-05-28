@@ -245,6 +245,9 @@ function SessionPageInner() {
       if (data.valid) {
         sessionStorage.setItem('the-seat-access', 'code')
         setCodeUnlocked(true)
+      } else if (data.requiresLogin) {
+        setInlineCodeError('Sign in first — codes are tied to your account so only you can use it. Hit "Sign In" in the top right.')
+        setInlineCodeLoading(false)
       } else {
         setInlineCodeError(data.message || "That code didn't work. Try again?")
         setInlineCodeLoading(false)
