@@ -9,24 +9,28 @@ export default function Resources() {
 
           <div className="resources-grid">
 
-            {/* Pre-Review Checklist */}
+            {/* Before You Take a Seat */}
             <div className="resource-card">
               <div className="resource-cover resource-cover-checklist">
                 <span className="resource-cover-brand">The Seat</span>
                 <div>
-                  <div className="resource-cover-title">Pre-Review<br />Checklist</div>
+                  <div className="resource-cover-title">Before You<br />Take a Seat</div>
                 </div>
                 <span className="resource-cover-tag tag-checklist">Checklist</span>
               </div>
               <div className="resource-body">
-                <h3>Pre-Review Checklist</h3>
-                <p>For L&amp;D leaders reviewing training submissions. Covers point of class, audience, desired behavior, survey questions, engagement ratios, and design standards.</p>
-                <button className="btn-download">↓ Download PDF</button>
+                <h3>Before You Take a Seat</h3>
+                <p>At some point, every L&amp;D person has sat in a review meeting thinking &ldquo;how did we get here.&rdquo; And every leader has thought the exact same thing from the other side of the table. Most of those fixes? They could have happened before anyone took a seat. This is how you make sure they do.</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, marginBottom: '16px', marginTop: '-4px' }}>
+                  Leaders: share this checklist with your team.<br />
+                  Designers: tick these off before you share.
+                </p>
+                <a href="/resources/before-you-take-a-seat.pdf" download className="btn-download">↓ Download PDF</a>
               </div>
             </div>
 
-            {/* Sparkle Dust Starter Kit */}
-            <div className="resource-card">
+            {/* Sparkle Dust Starter Kit — coming soon */}
+            <div className="resource-card resource-card-soon">
               <div className="resource-cover resource-cover-sparkle">
                 <span className="resource-cover-brand">The Seat</span>
                 <div>
@@ -37,7 +41,7 @@ export default function Resources() {
               <div className="resource-body">
                 <h3>Sparkle Dust Starter Kit</h3>
                 <p>Ideas for engagement moments: analogies, games, ice breakers. Includes the World&apos;s Best Ice Breakers and more.</p>
-                <button className="btn-download">↓ Download PDF</button>
+                <div className="resources-coming-pill" style={{ display: 'inline-block', marginTop: '4px' }}>Coming soon</div>
               </div>
             </div>
 

@@ -1591,10 +1591,6 @@ blockquote.pull p {
 }
 @media (max-width: 600px) {
   .persona-results-grid { grid-template-columns: 1fr; }
-  /* Upload page triptych — override inline style, stack on mobile */
-  .session-persona-triptych {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 /* ── Site footer ─────────────────────────────────────────────── */
@@ -1910,20 +1906,19 @@ blockquote.pull p {
   .contact-section { padding: 40px 20px; }
 }
 
-/* ── Session page persona triptych on mobile ─────────────────── */
-/* These target inline-styled elements via a wrapper class */
+/* ── Session page persona triptych ───────────────────────────── */
+.session-persona-triptych {
+  overflow: hidden; /* clips card backgrounds to outer border-radius */
+}
 @media (max-width: 768px) {
   .session-persona-triptych {
-    grid-template-columns: repeat(3, 240px) !important;
-    overflow-x: auto !important;
-    overflow-y: visible !important;
-    border-radius: 20px !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 4px;
+    grid-template-columns: 1fr !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    gap: 12px;
   }
-  .session-persona-triptych::-webkit-scrollbar { display: none; }
   .session-persona-triptych > div {
-    flex-shrink: 0;
+    border-radius: 20px !important;
   }
 }
