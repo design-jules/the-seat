@@ -1582,7 +1582,7 @@ blockquote.pull p {
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
 
-/* ── Persona results grid (session page) ───────────────────────── */
+/* ── Persona grids (session page) ───────────────────────────────── */
 .persona-results-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1591,6 +1591,10 @@ blockquote.pull p {
 }
 @media (max-width: 600px) {
   .persona-results-grid { grid-template-columns: 1fr; }
+  /* Upload page triptych — override inline style, stack on mobile */
+  .session-persona-triptych {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ── Site footer ─────────────────────────────────────────────── */
