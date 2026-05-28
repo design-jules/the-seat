@@ -10,10 +10,10 @@ export async function POST(request: NextRequest) {
 
     const supabase = createClient()
 
-    // Look up the code — include email so we can check if it's already claimed
+    // Look up the code — include email and note so we know if it's generic/claimed
     const { data, error } = await supabase
       .from('access_codes')
-      .select('id, email')
+      .select('id, email, note')
       .eq('code', code.trim().toUpperCase())
       .single()
 
@@ -22,6 +22,16 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: { user } } = await supabase.auth.getUser()
+
+    // Generic codes (note = 'generic') are reusable for anyone — no account tying
+    if (data.note === 'generic') {
+      if (user) {
+        await supabase
+          .from('approved_users')
+          .upsert({ user_id: user.id, approved_via: 'code' }, { onConflict: 'user_id' })
+      }
+      return NextResponse.json({ valid: true })
+    }
 
     // Code is already claimed — check if it belongs to this user
     if (data.email) {
