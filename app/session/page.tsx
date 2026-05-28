@@ -165,6 +165,7 @@ function SessionPageInner() {
   const [userName, setUserName] = useState<string | null>(null)
   const [inputTab, setInputTab] = useState<'upload' | 'paste'>('upload')
   const [isListening, setIsListening] = useState(false)
+  const [interimTranscript, setInterimTranscript] = useState('')
   const [codeUnlocked, setCodeUnlocked] = useState(false)
   const [inlineCode, setInlineCode] = useState('')
   const [inlineCodeError, setInlineCodeError] = useState<string | null>(null)
@@ -265,13 +266,21 @@ function SessionPageInner() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recognition = new SR() as any
     recognition.lang = 'en-US'
-    recognition.interimResults = false
+    recognition.interimResults = true
+    recognition.continuous = true
     recognition.onstart = () => setIsListening(true)
-    recognition.onend = () => setIsListening(false)
+    recognition.onend = () => { setIsListening(false); setInterimTranscript('') }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (e: any) => {
-      const transcript = e.results[0][0].transcript
-      setPastedText((prev: string) => prev ? `${prev} ${transcript}` : transcript)
+      let interim = ''
+      let final = ''
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript
+        if (e.results[i].isFinal) final += t
+        else interim += t
+      }
+      if (final) setPastedText((prev: string) => prev ? `${prev} ${final}` : final)
+      setInterimTranscript(interim)
     }
     recognition.start()
   }
@@ -1004,6 +1013,11 @@ function SessionPageInner() {
                     {isListening ? 'Listening...' : 'Speak it instead'}
                   </button>
                 </div>
+                {isListening && (
+                  <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.45)', fontStyle: 'italic', marginTop: '6px', marginBottom: 0, minHeight: '20px' }}>
+                    {interimTranscript || '...'}
+                  </p>
+                )}
                 {pastedText.trim().length > 0 && pastedText.trim().length < 200 && (
                   <p style={{ fontSize: '13px', color: 'rgba(232,145,58,0.9)', marginTop: '8px', marginBottom: 0, fontWeight: 500 }}>
                     The more detail you give, the more honest the reactions will be.
