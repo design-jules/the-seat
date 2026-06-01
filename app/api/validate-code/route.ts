@@ -21,7 +21,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ valid: false, message: "That code didn't work. Try again?" })
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
+    // Get user — prefer Authorization header token (more reliable than cookies alone)
+    const authHeader = request.headers.get('Authorization')
+    const token = authHeader?.replace('Bearer ', '')
+    const { data: { user } } = token
+      ? await supabase.auth.getUser(token)
+      : await supabase.auth.getUser()
 
     // Generic codes (note = 'generic') are reusable for anyone — no account tying
     if (data.note === 'generic') {
