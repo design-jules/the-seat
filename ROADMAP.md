@@ -152,22 +152,37 @@ In strict priority order:
 - **Shareable punch list** — wait until retention data shows users want to come back. Build the sharing loop only after the core loop is validated.
 - **Rate limiting** — wait until Stripe is live, then do it immediately.
 - **Team features** — wait until 3 user interviews confirm the team use case and at least one user says "I'd pay more for team access."
+- **More personas** — see below. Legitimate and important, but needs a design brief from real users first.
+- **Certification / badge** — "This training passed The Seat" has real potential in L&D circles. Revisit in 6 months when you have enough completed sessions to define what passing means and who would display it.
+- **Articulate/Rise integration** — useful retention play, but not until you have 500 users who regularly use those tools. Build integrations for the workflow tools your users are already in, not the ones you assume they use.
+- **Mobile app** — build it when mobile sessions are a meaningful share of traffic and users are complaining about the web experience. Not today.
 
 ---
 
 ## What Should Probably Never Be Built
 
-**A mobile app.** The web product isn't validated. Build an app when you have so many mobile users that not having one is causing churn. That day is not today.
+**An AI-powered training builder.** "What if The Seat could also help you build the training?" is a different product, a different market, and a different company. The Seat's power comes from being a feedback tool, not a creation tool. Mixing them risks losing the identity entirely. If this ever gets built, it should be a separate product.
 
-**More personas.** Dana, Marcus, and Bex are enough to validate PMF. A fourth persona dilutes the brand, increases the surface area for bad outputs, and doesn't address the core question: do people find value in the three they have?
+**A community platform.** Julie is the community. Forums, Slack groups, and Discord servers require maintenance, moderation, and critical mass that doesn't yet exist. Build community through Julie's content and voice. If a community emerges organically, give it a home. Don't build the home first and hope community shows up.
 
-**A certification or badge system.** "This training passed The Seat" sounds great. It is a distraction. Come back to this in 12 months when you have enough users to define what "passing" means.
+---
 
-**An AI-powered training builder.** "What if The Seat could also help you build the training?" is a completely different product, a completely different market, and a completely different company. Stay in your lane. The Seat is a pressure-testing tool.
+## On More Personas (A Longer Note)
 
-**A community platform.** Julie already is the community. Forums, Slack groups, and Discord servers require maintenance, moderation, and critical mass. Build community through Julie's content and voice. Not a platform.
+More personas is **not** on the never-build list. It is the right direction. The argument against building them *right now* is about timing and quality, not direction.
 
-**Articulate/Rise integration.** Useful. Not important yet. Build integrations for your workflow tools after you have 500 users who regularly use those tools. Integration is a retention play, not an acquisition play.
+**Why not yet:**
+Dana, Marcus, and Bex are not just system prompts — they're fully calibrated characters with specific opening moves, progression arcs, and coaching modes. A rushed fourth persona that produces generic feedback would hurt the product more than having three great ones. And we don't yet know which of the three existing personas produces the most value, which would inform what archetype comes next.
+
+**When to build them:**
+After 10 customer interviews. Let users tell you who is missing from the room. "I need someone who represents the person who sits in training but is secretly going to share everything with HR." "I need the executive sponsor who only cares about business impact." "I need the complete beginner who is genuinely lost." Those are design briefs. That's when you build the next one.
+
+**What the expansion looks like:**
+- New archetypes unlocked by industry or use case (compliance training, sales enablement, leadership development each have distinct learner types)
+- Custom persona builder for enterprise customers ("describe your audience, we'll generate a persona")
+- Named personas submitted by the community and validated by Julie
+
+The persona system is the core IP of The Seat. Expanding it thoughtfully is one of the most valuable things the product can do. The trigger is: user research has told us exactly who needs to be in the room next.
 
 ---
 
