@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import posthog from 'posthog-js'
 
 // Client-side file → text extraction (no upload size limits)
 async function extractTextFromFile(file: File): Promise<string> {
@@ -171,6 +172,11 @@ function SessionPageInner() {
   const [inlineCodeError, setInlineCodeError] = useState<string | null>(null)
   const [inlineCodeLoading, setInlineCodeLoading] = useState(false)
   const [completedSessions, setCompletedSessions] = useState<Array<{ persona: Persona; items: PunchListItem[] }>>([])
+  const [feedbackEmail, setFeedbackEmail] = useState('')
+  const [feedbackEmailSent, setFeedbackEmailSent] = useState(false)
+  const [feedbackRating, setFeedbackRating] = useState<number | null>(null)
+  const [feedbackComment, setFeedbackComment] = useState('')
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -194,7 +200,21 @@ function SessionPageInner() {
     }
   }, [punchlistItems, selectedPersona])
 
+  const handleFeedbackSubmit = async () => {
+    if (!feedbackRating) return
+    const supabase = createClient()
+    await supabase.from('feedback').insert({
+      session_id: sessionId ?? null,
+      email: feedbackEmail.trim() || null,
+      rating: feedbackRating,
+      comment: feedbackComment.trim() || null,
+    })
+    posthog.capture('feedback_submitted', { rating: feedbackRating, has_email: !!feedbackEmail, has_comment: !!feedbackComment })
+    setFeedbackSubmitted(true)
+  }
+
   const handleDownloadPDF = () => {
+    posthog.capture('pdf_downloaded', { personas_completed: completedSessions.length })
     const personaLabels: Record<string, string> = {
       skeptic: 'Dana — The Skeptic',
       slammed: 'Marcus — The Slammed',
@@ -400,6 +420,7 @@ function SessionPageInner() {
   const handleScan = async () => {
     setScanError(null)
     setPhase('scanning')
+    posthog.capture('scan_started', { input_type: uploadedFile ? 'file' : 'paste' })
 
     let content = ''
 
@@ -441,6 +462,7 @@ function SessionPageInner() {
   const proceedWithPersona = async (persona: Persona, skipToList: boolean) => {
     setSelectedPersona(persona)
     chatInitialized.current = false
+    posthog.capture('persona_selected', { persona, skip_to_list: skipToList })
     const id = await saveSession(persona, trainingContent, trainingTitle, confidenceBefore)
     setSessionId(id)
     if (skipToList) {
@@ -489,7 +511,7 @@ function SessionPageInner() {
     }
     setPendingPersona({ persona, skipToList })
     setShowAccessGate(true)
-  }
+    posthog.capture('gate_shown', { has_account: false })
 
   const handleBetaEmailRequest = async () => {
     if (!betaEmail.trim()) return
@@ -687,6 +709,11 @@ function SessionPageInner() {
       if (sessionId && data.items?.length) {
         savePunchlistItems(sessionId, data.items)
       }
+      posthog.capture('punchlist_generated', {
+        persona: selectedPersona,
+        item_count: data.items?.length ?? 0,
+        exchange_count: exchangeCount,
+      })
     } catch {
       setPunchlistError('Something went wrong generating your punch list. Please try again.')
     }
@@ -2097,6 +2124,65 @@ function SessionPageInner() {
             </div>
           </div>
         )}
+
+        {/* ── FEEDBACK + EMAIL CAPTURE ──────────────────────── */}
+        {punchlistItems && (
+          <div className="no-print" style={{ background: '#F4F1EC', padding: 'clamp(32px,4vw,48px) clamp(24px,5vw,64px)' }}>
+            <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center' }}>
+              {!feedbackSubmitted ? (
+                <>
+                  <p style={{ fontSize: '15px', fontWeight: 700, color: '#023B28', margin: '0 0 16px' }}>
+                    How was that?
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '20px' }}>
+                    {[{ emoji: '😕', value: 1 }, { emoji: '😐', value: 2 }, { emoji: '😊', value: 3 }, { emoji: '🤩', value: 4 }].map(({ emoji, value }) => (
+                      <button
+                        key={value}
+                        onClick={() => setFeedbackRating(value)}
+                        style={{
+                          fontSize: '28px', background: feedbackRating === value ? '#023B28' : 'rgba(2,59,40,0.08)',
+                          border: 'none', borderRadius: '12px', width: '52px', height: '52px',
+                          cursor: 'pointer', transition: 'all 0.15s ease', transform: feedbackRating === value ? 'scale(1.12)' : 'scale(1)',
+                        }}
+                      >{emoji}</button>
+                    ))}
+                  </div>
+                  {feedbackRating && (
+                    <>
+                      <textarea
+                        placeholder="Tell us more — what should we know? (optional)"
+                        value={feedbackComment}
+                        onChange={e => setFeedbackComment(e.target.value)}
+                        rows={2}
+                        style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', border: '1px solid rgba(2,59,40,0.15)', fontFamily: 'var(--font-inter-tight), sans-serif', fontSize: '14px', color: '#023B28', background: '#fff', resize: 'none', marginBottom: '10px', boxSizing: 'border-box' }}
+                      />
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+                        <input
+                          type="email"
+                          placeholder="Email — want us to follow up? (optional)"
+                          value={feedbackEmail}
+                          onChange={e => setFeedbackEmail(e.target.value)}
+                          style={{ flex: 1, padding: '11px 16px', borderRadius: '10px', border: '1px solid rgba(2,59,40,0.15)', fontFamily: 'var(--font-inter-tight), sans-serif', fontSize: '14px', color: '#023B28', background: '#fff' }}
+                        />
+                        <button
+                          onClick={handleFeedbackSubmit}
+                          style={{ background: '#149077', color: '#fff', border: 'none', borderRadius: '10px', padding: '11px 20px', fontSize: '14px', fontWeight: 700, fontFamily: 'var(--font-inter-tight), sans-serif', cursor: 'pointer' }}
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <p style={{ fontSize: '15px', color: 'rgba(2,59,40,0.6)', margin: 0 }}>
+                  Thanks — that genuinely helps. 🙏
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     )
   }

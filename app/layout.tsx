@@ -3,6 +3,7 @@ import { Inter_Tight } from "next/font/google";
 import "./globals.css";
 import NavWrapper from "@/components/NavWrapper";
 import Footer from "@/components/Footer";
+import { PHProvider } from "./providers";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -23,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${interTight.variable} antialiased`}>
-        <NavWrapper />
-        {children}
-        <Footer />
+        <PHProvider>
+          <NavWrapper />
+          {children}
+          <Footer />
+        </PHProvider>
       </body>
     </html>
   );

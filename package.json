@@ -18,6 +18,7 @@
     "next": "14.2.35",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.7.284",
+    "posthog-js": "^1.378.1",
     "react": "^18",
     "react-dom": "^18",
     "stripe": "^22.1.1"
