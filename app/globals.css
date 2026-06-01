@@ -1594,6 +1594,54 @@ blockquote.pull p {
 .about-obsess-body, .about-fact-text { color: rgba(2,59,40,0.75); }
 .about-body-text { color: rgba(2,59,40,0.75); }
 
+/* ── Testimonials ────────────────────────────────────────────────── */
+.testimonials-section {
+  background: #F4F1EC;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.testimonial-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 2px 12px rgba(2,59,40,0.06);
+  border: 1px solid rgba(2,59,40,0.07);
+}
+.testimonial-quote {
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(2,59,40,0.75);
+  margin: 0;
+  flex: 1;
+  font-style: italic;
+}
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(2,59,40,0.08);
+}
+.testimonial-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--evergreen);
+}
+.testimonial-role {
+  font-size: 12px;
+  color: rgba(2,59,40,0.45);
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .testimonials-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Persona grids (session page) ───────────────────────────────── */
 .persona-results-grid {
   display: grid;

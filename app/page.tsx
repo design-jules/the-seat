@@ -60,6 +60,43 @@ export default function Home() {
         <PersonaCycler />
       </Reveal>
 
+      {/* ── TESTIMONIALS ─────────────────────────────────────── */}
+      <section className="section testimonials-section">
+        <div className="section-inner">
+          <Reveal>
+            <p className="eyebrow eyebrow-center">What people are saying</p>
+            <h2 className="display display-center" style={{ marginBottom: '48px' }}>Real feedback on real training.</h2>
+            <div className="testimonials-grid">
+
+              <div className="testimonial-card">
+                <p className="testimonial-quote">&ldquo;I walked into my review with way more confidence. Dana asked exactly the question my VP ended up asking — and I already had the answer.&rdquo;</p>
+                <div className="testimonial-author">
+                  <span className="testimonial-name">— L&amp;D Designer</span>
+                  <span className="testimonial-role">Financial Services</span>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <p className="testimonial-quote">&ldquo;I sent it to my whole team before our next review cycle. We caught three things that would have been embarrassing in the room.&rdquo;</p>
+                <div className="testimonial-author">
+                  <span className="testimonial-name">— Head of Learning</span>
+                  <span className="testimonial-role">Tech Company</span>
+                </div>
+              </div>
+
+              <div className="testimonial-card">
+                <p className="testimonial-quote">&ldquo;Marcus made me realise my entire module had no clear takeaway. I thought it was obvious. It wasn&apos;t.&rdquo;</p>
+                <div className="testimonial-author">
+                  <span className="testimonial-name">— Instructional Designer</span>
+                  <span className="testimonial-role">Healthcare</span>
+                </div>
+              </div>
+
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
     </main>
   );
 }
