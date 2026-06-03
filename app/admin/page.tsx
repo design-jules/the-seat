@@ -105,7 +105,7 @@ async function getMetrics() {
   // 13. Beta survey responses
   const { data: surveyData } = await admin
     .from('beta_survey')
-    .select('email, persona_hit_hardest, after_action, realness, improvement, would_recommend, created_at')
+    .select('email, persona_hit_hardest, after_action, realness, improvement, would_recommend, pricing, created_at')
     .order('created_at', { ascending: false })
 
   return {
@@ -152,6 +152,7 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
   const realnessLabel: Record<number, string> = { 1: '😐 Felt scripted', 2: '😊 Pretty believable', 3: '🤩 Uncomfortably accurate' }
   const afterActionLabel: Record<string, string> = { fixed: 'Fixed things immediately', shared: 'Forwarded to team', thinking: 'Still thinking', alot: 'Needed a minute' }
   const recommendLabel: Record<string, string> = { already: 'Already recommended it', yes: 'Yes, absolutely', probably: 'Probably', later: 'Ask me later' }
+  const pricingLabel: Record<string, string> = { free: 'Needs to be free', low: 'Under $15/mo', mid: '$20-40/mo', high: '$50+/mo (company pays)' }
 
   return (
     <main style={{ minHeight: '100vh', background: '#F4F1EC', padding: '40px 24px', fontFamily: 'var(--font-inter-tight), sans-serif' }}>
@@ -294,6 +295,7 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
                   {r.realness && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Realness: <strong style={{ color: '#023B28' }}>{realnessLabel[r.realness]}</strong></div>}
                   {r.after_action && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>After: <strong style={{ color: '#023B28' }}>{afterActionLabel[r.after_action] ?? r.after_action}</strong></div>}
                   {r.would_recommend && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Recommend: <strong style={{ color: '#023B28' }}>{recommendLabel[r.would_recommend] ?? r.would_recommend}</strong></div>}
+                  {r.pricing && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Pricing: <strong style={{ color: '#023B28' }}>{pricingLabel[r.pricing] ?? r.pricing}</strong></div>}
                 </div>
                 {r.improvement && <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.7)', margin: 0, lineHeight: 1.5, background: 'rgba(2,59,40,0.04)', padding: '10px 14px', borderRadius: '8px' }}>&ldquo;{r.improvement}&rdquo;</p>}
               </div>

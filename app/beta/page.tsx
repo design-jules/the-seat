@@ -9,6 +9,7 @@ type Answer = {
   realness: number | null
   improvement: string
   would_recommend: string
+  pricing: string
   email: string
 }
 
@@ -18,6 +19,7 @@ const empty: Answer = {
   realness: null,
   improvement: '',
   would_recommend: '',
+  pricing: '',
   email: '',
 }
 
@@ -33,7 +35,8 @@ export default function BetaPage() {
     answers.persona_hit_hardest &&
     answers.after_action &&
     answers.realness !== null &&
-    answers.would_recommend
+    answers.would_recommend &&
+    answers.pricing
 
   async function handleSubmit() {
     if (!ready) return
@@ -46,6 +49,7 @@ export default function BetaPage() {
       realness: answers.realness,
       improvement: answers.improvement.trim() || null,
       would_recommend: answers.would_recommend,
+      pricing: answers.pricing,
     })
     setSubmitted(true)
     setSubmitting(false)
@@ -76,12 +80,9 @@ export default function BetaPage() {
       {/* Hero */}
       <div style={{ background: '#023B28', padding: 'clamp(48px, 7vw, 80px) clamp(24px, 6vw, 80px) clamp(40px, 5vw, 64px)', textAlign: 'center' }}>
         <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(253,250,247,0.4)', margin: '0 0 16px' }}>The Seat — Beta Feedback</p>
-        <h1 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, color: '#FDFAF7', margin: '0 0 16px', letterSpacing: '-0.03em', lineHeight: 1.05 }}>
+        <h1 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, color: '#FDFAF7', margin: 0, letterSpacing: '-0.03em', lineHeight: 1.05 }}>
           You sat in the seat.<br />Now tell us what you really think.
         </h1>
-        <p style={{ fontSize: 'clamp(15px, 2vw, 18px)', fontWeight: 300, color: 'rgba(253,250,247,0.55)', margin: 0, maxWidth: '520px', marginInline: 'auto', lineHeight: 1.6 }}>
-          5 questions. No fluff. Your answers go directly into what we build next.
-        </p>
       </div>
 
       {/* Form */}
@@ -90,14 +91,15 @@ export default function BetaPage() {
         {/* Q1 */}
         <div style={{ marginBottom: '48px' }}>
           <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#149077', margin: '0 0 10px' }}>01</p>
-          <h2 style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: '#023B28', margin: '0 0 20px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
-            Which seat hit the hardest?
+          <h2 style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: '#023B28', margin: '0 0 8px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+            Which persona gave you the most useful feedback?
           </h2>
+          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 20px' }}>Pick the one that made you want to go fix something.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
-              { val: 'skeptic', label: 'Dana — The Skeptic', sub: 'The one who needed convincing' },
-              { val: 'slammed', label: 'Marcus — The Slammed', sub: 'The one with no time for this' },
-              { val: 'hype', label: 'Bex — The Hype', sub: 'The one who loved everything (maybe too much)' },
+              { val: 'skeptic', label: 'Dana, The Skeptic', sub: 'The one who needed convincing' },
+              { val: 'slammed', label: 'Marcus, The Slammed', sub: 'The one with no time for this' },
+              { val: 'hype', label: 'Bex, The Hype', sub: 'The one who loved everything (maybe too much)' },
               { val: 'all', label: 'Honestly? All three got me.', sub: '' },
             ].map(({ val, label, sub }) => (
               <button
@@ -127,7 +129,7 @@ export default function BetaPage() {
             {[
               { val: 'fixed', label: 'Started fixing things immediately' },
               { val: 'shared', label: 'Forwarded it to someone on my team' },
-              { val: 'thinking', label: "Still sitting with it — I need to think" },
+              { val: 'thinking', label: 'Still sitting with it. Need to think.' },
               { val: 'alot', label: 'Needed a minute. It was a lot.' },
             ].map(({ val, label }) => (
               <button
@@ -152,7 +154,7 @@ export default function BetaPage() {
           <h2 style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: '#023B28', margin: '0 0 8px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
             How real did the feedback feel?
           </h2>
-          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 20px' }}>Like, did it actually sound like a real learner?</p>
+          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 20px' }}>Did it actually sound like a real learner?</p>
           <div style={{ display: 'flex', gap: '12px' }}>
             {[
               { val: 1, emoji: '😐', label: 'Felt a little scripted' },
@@ -182,7 +184,7 @@ export default function BetaPage() {
           <h2 style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: '#023B28', margin: '0 0 8px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
             What would make you use this every single time?
           </h2>
-          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 16px' }}>Optional — but seriously, we want to know.</p>
+          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 16px' }}>Optional, but seriously, we want to know.</p>
           <textarea
             value={answers.improvement}
             onChange={e => set('improvement', e.target.value)}
@@ -227,6 +229,37 @@ export default function BetaPage() {
           </div>
         </div>
 
+        {/* Q6 — Pricing */}
+        <div style={{ marginBottom: '48px' }}>
+          <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#149077', margin: '0 0 10px' }}>06</p>
+          <h2 style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: '#023B28', margin: '0 0 8px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+            If The Seat had a price tag, what would feel right?
+          </h2>
+          <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.45)', margin: '0 0 20px' }}>We are figuring out pricing. Be honest.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { val: 'free', label: 'It needs to be free', sub: 'I would not pay for this' },
+              { val: 'low', label: 'Under $15/month', sub: 'Coffee money. Easy yes.' },
+              { val: 'mid', label: '$20 to $40/month', sub: 'Reasonable if I use it regularly' },
+              { val: 'high', label: '$50+/month', sub: 'Only if my company pays for it' },
+            ].map(({ val, label, sub }) => (
+              <button
+                key={val}
+                onClick={() => set('pricing', val)}
+                style={{
+                  textAlign: 'left', padding: '16px 20px', borderRadius: '12px', cursor: 'pointer',
+                  border: `2px solid ${answers.pricing === val ? '#023B28' : 'rgba(2,59,40,0.1)'}`,
+                  background: answers.pricing === val ? '#023B28' : '#fff',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <p style={{ fontSize: '15px', fontWeight: 700, color: answers.pricing === val ? '#FDFAF7' : '#023B28', margin: '0 0 2px' }}>{label}</p>
+                <p style={{ fontSize: '13px', color: answers.pricing === val ? 'rgba(253,250,247,0.55)' : 'rgba(2,59,40,0.45)', margin: 0 }}>{sub}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Email */}
         <div style={{ marginBottom: '40px', padding: '24px', background: 'rgba(2,59,40,0.04)', borderRadius: '16px' }}>
           <p style={{ fontSize: '14px', fontWeight: 700, color: '#023B28', margin: '0 0 4px' }}>Want us to follow up?</p>
@@ -261,7 +294,7 @@ export default function BetaPage() {
 
         {!ready && (
           <p style={{ textAlign: 'center', fontSize: '12px', color: 'rgba(2,59,40,0.35)', margin: '12px 0 0' }}>
-            Answer questions 1, 2, 3, and 5 to submit
+            Answer questions 1, 2, 3, 5, and 6 to submit
           </p>
         )}
 

@@ -6,6 +6,7 @@ create table if not exists beta_survey (
   realness int check (realness between 1 and 3),  -- 1=scripted 2=believable 3=uncanny
   improvement text,            -- open text
   would_recommend text,        -- 'already' | 'yes' | 'probably' | 'later'
+  pricing text,                -- 'free' | 'low' | 'mid' | 'high'
   created_at timestamptz default now()
 );
 
