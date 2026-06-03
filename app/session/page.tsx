@@ -554,9 +554,14 @@ function SessionPageInner() {
     setGateCodeLoading(true)
     setGateCodeError(null)
     try {
+      const supabase = createClient()
+      const { data: { session: authSession } } = await supabase.auth.getSession()
       const res = await fetch('/api/validate-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authSession?.access_token ? { 'Authorization': `Bearer ${authSession.access_token}` } : {}),
+        },
         body: JSON.stringify({ code: gateCode }),
       })
       const data = await res.json()
