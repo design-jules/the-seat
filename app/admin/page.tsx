@@ -1,6 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,14 +36,15 @@ async function getMetrics() {
   // 6. Punch list sessions
   const { data: punchlistData } = await admin.from('punch_list_items').select('session_id')
   const punchlistSessionIds = new Set((punchlistData ?? []).map(r => r.session_id))
+  const punchlistSessionIdsArray = Array.from(punchlistSessionIds)
 
   const { data: plSessions } = await admin
     .from('sessions')
     .select('user_id')
-    .in('id', punchlistSessionIds.size > 0 ? [...punchlistSessionIds] : ['00000000-0000-0000-0000-000000000000'])
+    .in('id', punchlistSessionIdsArray.length > 0 ? punchlistSessionIdsArray : ['00000000-0000-0000-0000-000000000000'])
     .not('user_id', 'is', null)
   const punchlistUserIds = new Set((plSessions ?? []).map(r => r.user_id))
-  const generatedPunchlist = [...punchlistUserIds].filter(id => approvedIds.has(id)).length
+  const generatedPunchlist = Array.from(punchlistUserIds).filter(id => approvedIds.has(id)).length
 
   // 7. Returned users (2+ sessions)
   const sessionCountByUser: Record<string, number> = {}
@@ -73,7 +73,7 @@ async function getMetrics() {
 
   // 9. Enrich recent 10 sessions with email
   const recentSessions = sessions.slice(0, 10)
-  const userIds = [...new Set(recentSessions.map(s => s.user_id).filter(Boolean))]
+  const userIds = Array.from(new Set(recentSessions.map(s => s.user_id).filter(Boolean)))
   const emailMap: Record<string, string> = {}
   if (userIds.length > 0) {
     const { data: users } = await admin.schema('auth').from('users').select('id, email').in('id', userIds)
