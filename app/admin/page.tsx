@@ -6,11 +6,9 @@ export const dynamic = 'force-dynamic'
 async function getMetrics() {
   const admin = createAdminClient()
 
-  // 1. Total signups (auth.users) — correct schema() position
-  const { count: totalSignups } = await admin
-    .schema('auth')
-    .from('users')
-    .select('*', { count: 'exact', head: true })
+  // 1. Total signups — use admin.auth.admin.listUsers() which is reliable with service role
+  const { data: { users: authUsers } } = await admin.auth.admin.listUsers({ perPage: 1000 })
+  const totalSignups = authUsers?.length ?? 0
 
   // 2. Have access
   const { count: haveAccess } = await admin
@@ -97,15 +95,21 @@ async function getMetrics() {
   const personaCounts: Record<string, number> = {}
   for (const s of sessions) personaCounts[s.persona] = (personaCounts[s.persona] ?? 0) + 1
 
-  // 12. Recent feedback
+  // 12. Recent in-app emoji feedback
   const { data: feedbackData } = await admin
     .from('feedback')
     .select('rating, comment, email, created_at')
     .order('created_at', { ascending: false })
     .limit(10)
 
+  // 13. Beta survey responses
+  const { data: surveyData } = await admin
+    .from('beta_survey')
+    .select('email, persona_hit_hardest, after_action, realness, improvement, would_recommend, created_at')
+    .order('created_at', { ascending: false })
+
   return {
-    totalSignups: totalSignups ?? 0,
+    totalSignups,
     haveAccess: haveAccess ?? 0,
     activated,
     generatedPunchlist,
@@ -118,6 +122,7 @@ async function getMetrics() {
     codes: { generic, claimed, unclaimed, unclaimedCodes },
     personaCounts,
     feedback: feedbackData ?? [],
+    survey: surveyData ?? [],
   }
 }
 
@@ -144,6 +149,9 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
   const now = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' })
   const personaLabel: Record<string, string> = { skeptic: 'Dana', slammed: 'Marcus', hype: 'Bex' }
   const ratingEmoji = ['', '😕', '😐', '😊', '🤩']
+  const realnessLabel: Record<number, string> = { 1: '😐 Felt scripted', 2: '😊 Pretty believable', 3: '🤩 Uncomfortably accurate' }
+  const afterActionLabel: Record<string, string> = { fixed: 'Fixed things immediately', shared: 'Forwarded to team', thinking: 'Still thinking', alot: 'Needed a minute' }
+  const recommendLabel: Record<string, string> = { already: 'Already recommended it', yes: 'Yes, absolutely', probably: 'Probably', later: 'Ask me later' }
 
   return (
     <main style={{ minHeight: '100vh', background: '#F4F1EC', padding: '40px 24px', fontFamily: 'var(--font-inter-tight), sans-serif' }}>
@@ -264,6 +272,30 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
                   <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)', marginLeft: 'auto' }}>{new Date(f.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 </div>
                 {f.comment && <p style={{ fontSize: '14px', color: 'rgba(2,59,40,0.7)', margin: '4px 0 0 30px', lineHeight: 1.5 }}>{f.comment}</p>}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Beta survey responses */}
+        {m.survey.length > 0 && (
+          <div style={{ background: '#fff', borderRadius: '16px', padding: '20px 24px', border: '1px solid rgba(2,59,40,0.08)', marginTop: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: 0 }}>Beta Survey — {m.survey.length} response{m.survey.length !== 1 ? 's' : ''}</p>
+            </div>
+            {m.survey.map((r, i) => (
+              <div key={i} style={{ padding: '16px 0', borderBottom: i < m.survey.length - 1 ? '1px solid rgba(2,59,40,0.06)' : 'none' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#149077' }}>{r.email || 'Anonymous'}</span>
+                  <span style={{ fontSize: '11px', color: 'rgba(2,59,40,0.35)' }}>{new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: r.improvement ? '10px' : 0 }}>
+                  {r.persona_hit_hardest && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Persona: <strong style={{ color: '#023B28' }}>{r.persona_hit_hardest === 'all' ? 'All three' : personaLabel[r.persona_hit_hardest]}</strong></div>}
+                  {r.realness && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Realness: <strong style={{ color: '#023B28' }}>{realnessLabel[r.realness]}</strong></div>}
+                  {r.after_action && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>After: <strong style={{ color: '#023B28' }}>{afterActionLabel[r.after_action] ?? r.after_action}</strong></div>}
+                  {r.would_recommend && <div style={{ fontSize: '12px', color: 'rgba(2,59,40,0.6)' }}>Recommend: <strong style={{ color: '#023B28' }}>{recommendLabel[r.would_recommend] ?? r.would_recommend}</strong></div>}
+                </div>
+                {r.improvement && <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.7)', margin: 0, lineHeight: 1.5, background: 'rgba(2,59,40,0.04)', padding: '10px 14px', borderRadius: '8px' }}>&ldquo;{r.improvement}&rdquo;</p>}
               </div>
             ))}
           </div>
