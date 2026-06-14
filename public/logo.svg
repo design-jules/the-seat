@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" fill="none">
+  <line x1="20" y1="40" x2="22" y2="15" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="52" y1="40" x2="50" y2="15" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M22 15 Q36 11 50 15" stroke="#023B28" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <path d="M21 28 Q36 32 51 28" stroke="#023B28" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M18 40 Q36 46 54 40" stroke="#023B28" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <line x1="25" y1="43" x2="23" y2="60" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="47" y1="43" x2="49" y2="60" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="20" y1="40" x2="17" y2="60" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="52" y1="40" x2="55" y2="60" stroke="#023B28" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="76" y="46" font-family="'Georgia', 'Times New Roman', serif" font-size="26" font-weight="400" letter-spacing="4" fill="#023B28">THE SEAT</text>
+</svg>
