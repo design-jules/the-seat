@@ -18,15 +18,33 @@ async function getPostHogStats() {
     WHERE event = '$pageview' AND timestamp > now() - INTERVAL 30 DAY
   `
 
-  const res = await fetch(`${host}/api/projects/${projectId}/query/`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ query: { kind: 'HogQLQuery', query } }),
-    cache: 'no-store',
-  })
+  const dailyQuery = `
+    SELECT toDate(timestamp) AS day, count() AS pageviews
+    FROM events
+    WHERE event = '$pageview' AND timestamp > now() - INTERVAL 14 DAY
+    GROUP BY day
+    ORDER BY day
+  `
+
+  const headers = {
+    Authorization: `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+  }
+
+  const [res, dailyRes] = await Promise.all([
+    fetch(`${host}/api/projects/${projectId}/query/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ query: { kind: 'HogQLQuery', query } }),
+      cache: 'no-store',
+    }),
+    fetch(`${host}/api/projects/${projectId}/query/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ query: { kind: 'HogQLQuery', query: dailyQuery } }),
+      cache: 'no-store',
+    }),
+  ])
 
   if (!res.ok) return null
 
@@ -34,8 +52,16 @@ async function getPostHogStats() {
   const row = data?.results?.[0]
   if (!row) return null
 
-  return { pageviews: row[0] ?? 0, visitors: row[1] ?? 0 }
+  let daily: { day: string; pageviews: number }[] = []
+  if (dailyRes.ok) {
+    const dailyData = await dailyRes.json()
+    daily = (dailyData?.results ?? []).map((r: [string, number]) => ({ day: r[0], pageviews: r[1] }))
+  }
+
+  return { pageviews: row[0] ?? 0, visitors: row[1] ?? 0, daily }
 }
+
+
 async function getMetrics() {
   const admin = createAdminClient()
 
@@ -220,17 +246,38 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
         {/* Site traffic (PostHog) */}
         <div style={{ background: '#fff', borderRadius: '16px', padding: '20px 24px', border: '1px solid rgba(2,59,40,0.08)', marginBottom: '24px' }}>
           <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: '0 0 16px' }}>Site Traffic — Last 30 Days</p>
-          {postHog ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div>
-                <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.pageviews}</p>
-                <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>pageviews</p>
+                   {postHog ? (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: postHog.daily.length > 0 ? '24px' : 0 }}>
+                <div>
+                  <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.pageviews}</p>
+                  <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>pageviews</p>
+                </div>
+                <div>
+                  <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.visitors}</p>
+                  <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>unique visitors</p>
+                </div>
               </div>
-              <div>
-                <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.visitors}</p>
-                <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>unique visitors</p>
-              </div>
-            </div>
+              {postHog.daily.length > 0 && (
+                <div>
+                  <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: '0 0 12px' }}>Daily Pageviews — Last 14 Days</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px', height: '100px' }}>
+                    {postHog.daily.map((d) => {
+                      const max = Math.max(...postHog!.daily.map(x => x.pageviews), 1)
+                      const heightPct = Math.max((d.pageviews / max) * 100, 2)
+                      return (
+                        <div key={d.day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+                          <div title={`${d.day}: ${d.pageviews}`} style={{ width: '100%', height: `${heightPct}%`, background: '#149077', borderRadius: '3px 3px 0 0', minHeight: '2px' }} />
+                          <p style={{ fontSize: '10px', color: 'rgba(2,59,40,0.4)', margin: '4px 0 0', whiteSpace: 'nowrap' }}>
+                            {new Date(d.day).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })}
+                          </p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>
               Not configured — set <code>POSTHOG_PERSONAL_API_KEY</code> and <code>POSTHOG_PROJECT_ID</code> in Vercel env vars.
