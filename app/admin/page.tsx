@@ -3,6 +3,39 @@ import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
+async function getPostHogStats() {
+  const apiKey = process.env.POSTHOG_PERSONAL_API_KEY
+  const projectId = process.env.POSTHOG_PROJECT_ID
+  const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+
+  if (!apiKey || !projectId) return null
+
+  const query = `
+    SELECT
+      count() AS pageviews,
+      count(DISTINCT person_id) AS visitors
+    FROM events
+    WHERE event = '$pageview' AND timestamp > now() - INTERVAL 30 DAY
+  `
+
+  const res = await fetch(`${host}/api/projects/${projectId}/query/`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query: { kind: 'HogQLQuery', query } }),
+    cache: 'no-store',
+  })
+
+  if (!res.ok) return null
+
+  const data = await res.json()
+  const row = data?.results?.[0]
+  if (!row) return null
+
+  return { pageviews: row[0] ?? 0, visitors: row[1] ?? 0 }
+}
 async function getMetrics() {
   const admin = createAdminClient()
 
@@ -133,9 +166,11 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
     redirect('/')
   }
 
-  let m
+    let m
+  let postHog
   try {
     m = await getMetrics()
+    postHog = await getPostHogStats()
   } catch (e) {
     return (
       <main style={{ padding: '60px 40px', fontFamily: 'monospace' }}>
@@ -182,6 +217,28 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
           ))}
         </div>
 
+        {/* Site traffic (PostHog) */}
+        <div style={{ background: '#fff', borderRadius: '16px', padding: '20px 24px', border: '1px solid rgba(2,59,40,0.08)', marginBottom: '24px' }}>
+          <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: '0 0 16px' }}>Site Traffic — Last 30 Days</p>
+          {postHog ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.pageviews}</p>
+                <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>pageviews</p>
+              </div>
+              <div>
+                <p style={{ fontSize: '36px', fontWeight: 800, color: '#023B28', margin: '0 0 4px', letterSpacing: '-0.03em', lineHeight: 1 }}>{postHog.visitors}</p>
+                <p style={{ fontSize: '12px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>unique visitors</p>
+              </div>
+            </div>
+          ) : (
+            <p style={{ fontSize: '13px', color: 'rgba(2,59,40,0.4)', margin: 0 }}>
+              Not configured — set <code>POSTHOG_PERSONAL_API_KEY</code> and <code>POSTHOG_PROJECT_ID</code> in Vercel env vars.
+            </p>
+          )}
+        </div>
+
+        
         {/* Persona + codes */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           <div style={{ background: '#fff', borderRadius: '16px', padding: '20px 24px', border: '1px solid rgba(2,59,40,0.08)' }}>
