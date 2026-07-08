@@ -36,7 +36,9 @@
       "Bash(git config *)",
       "Bash(git commit -m 'Fix: remove leftover config.emoji reference causing build error *)",
       "Bash(npx tsc *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git merge *)",
+      "Bash(git commit *)"
     ]
   }
 }
