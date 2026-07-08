@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build*)",
+      "Bash(npx tsc --noEmit*)",
+      "Bash(npx next build*)",
+      "mcp__Claude_Preview__preview_screenshot",
+      "mcp__Claude_Preview__preview_logs",
+      "mcp__Claude_Preview__preview_console_logs",
+      "mcp__ccd_session__mark_chapter"
+    ]
+  }
+}
