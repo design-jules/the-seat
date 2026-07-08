@@ -38,7 +38,10 @@
       "Bash(dig +short ljungjqovdqaztpukvvt.supabase.co @1.1.1.1)",
       "Bash(dig +short supabase.co @8.8.8.8)",
       "Skill(fewer-permission-prompts)",
-      "Skill(fewer-permission-prompts:*)"
+      "Skill(fewer-permission-prompts:*)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git pull *)"
     ]
   }
 }
