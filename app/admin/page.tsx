@@ -86,9 +86,10 @@ async function getMetrics() {
   // 10. Beta requests + codes
   const { count: betaRequests } = await admin.from('beta_requests').select('*', { count: 'exact', head: true })
   const { data: codes } = await admin.from('access_codes').select('code, note, email, created_at').order('created_at', { ascending: false })
-  const generic = (codes ?? []).filter(c => c.note === 'generic').length
-  const claimed = (codes ?? []).filter(c => c.note !== 'generic' && c.email).length
-  const unclaimedCodes = (codes ?? []).filter(c => c.note !== 'generic' && !c.email)
+  const allCodes = codes ?? []
+  const generic = allCodes.filter(c => c.note === 'generic').length
+  const claimed = allCodes.filter(c => c.note !== 'generic' && c.email).length
+  const unclaimedCodes = allCodes.filter(c => c.note !== 'generic' && !c.email)
   const unclaimed = unclaimedCodes.length
 
   // 11. Persona counts
@@ -119,7 +120,7 @@ async function getMetrics() {
     totalSessions: sessions.length,
     recentSessions: enriched,
     betaRequests: betaRequests ?? 0,
-    codes: { generic, claimed, unclaimed, unclaimedCodes },
+    codes: { generic, claimed, unclaimed, unclaimedCodes, allCodes },
     personaCounts,
     feedback: feedbackData ?? [],
     survey: surveyData ?? [],
@@ -209,26 +210,34 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
           </div>
         </div>
 
-        {/* Unclaimed codes */}
-        {m.codes.unclaimedCodes.length > 0 && (
+        {/* All codes */}
+        {m.codes.allCodes.length > 0 && (
           <div style={{ background: '#fff', borderRadius: '16px', padding: '20px 24px', border: '1px solid rgba(2,59,40,0.08)', marginBottom: '24px' }}>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: '0 0 16px' }}>Unclaimed Codes</p>
+            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(2,59,40,0.4)', margin: '0 0 16px' }}>All Codes ({m.codes.allCodes.length})</p>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
               <thead>
-                <tr>{['Code', 'Label / Note', 'Created'].map(h => (
+                <tr>{['Code', 'Status', 'Label / Note', 'Claimed by', 'Created'].map(h => (
                   <th key={h} style={{ textAlign: 'left', fontWeight: 700, color: 'rgba(2,59,40,0.45)', paddingBottom: '10px', borderBottom: '1px solid rgba(2,59,40,0.08)' }}>{h}</th>
                 ))}</tr>
               </thead>
               <tbody>
-                {m.codes.unclaimedCodes.map((c, i) => (
-                  <tr key={c.code} style={{ borderBottom: i < m.codes.unclaimedCodes.length - 1 ? '1px solid rgba(2,59,40,0.06)' : 'none' }}>
-                    <td style={{ padding: '9px 0' }}>
-                      <code style={{ fontSize: '13px', fontWeight: 800, color: '#023B28', background: 'rgba(2,59,40,0.06)', padding: '3px 8px', borderRadius: '6px', letterSpacing: '0.05em' }}>{c.code}</code>
-                    </td>
-                    <td style={{ padding: '9px 0', color: 'rgba(2,59,40,0.55)' }}>{c.note || '—'}</td>
-                    <td style={{ padding: '9px 0', color: 'rgba(2,59,40,0.4)' }}>{new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-                  </tr>
-                ))}
+                {m.codes.allCodes.map((c, i) => {
+                  const status = c.note === 'generic' ? 'Reusable' : c.email ? 'Claimed' : 'Unclaimed'
+                  const statusColor = status === 'Reusable' ? '#149077' : status === 'Claimed' ? 'rgba(2,59,40,0.4)' : '#dc7a1a'
+                  return (
+                    <tr key={c.code} style={{ borderBottom: i < m.codes.allCodes.length - 1 ? '1px solid rgba(2,59,40,0.06)' : 'none' }}>
+                      <td style={{ padding: '9px 0' }}>
+                        <code style={{ fontSize: '13px', fontWeight: 800, color: '#023B28', background: 'rgba(2,59,40,0.06)', padding: '3px 8px', borderRadius: '6px', letterSpacing: '0.05em' }}>{c.code}</code>
+                      </td>
+                      <td style={{ padding: '9px 0' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: statusColor }}>{status}</span>
+                      </td>
+                      <td style={{ padding: '9px 0', color: 'rgba(2,59,40,0.55)' }}>{c.note || '—'}</td>
+                      <td style={{ padding: '9px 0', color: 'rgba(2,59,40,0.55)', maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.email || '—'}</td>
+                      <td style={{ padding: '9px 0', color: 'rgba(2,59,40,0.4)' }}>{new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
