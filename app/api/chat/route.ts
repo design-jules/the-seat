@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -49,6 +50,14 @@ ${trainingContent}`
 }
 
 export async function POST(request: NextRequest) {
+  const { allowed } = await checkRateLimit(getClientIp(request))
+  if (!allowed) {
+    return new Response(JSON.stringify({ error: "You've hit today's usage limit. Try again tomorrow, or reach out if you need more." }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   try {
     const body = await request.json()

@@ -445,11 +445,10 @@ function SessionPageInner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ trainingContent: content }),
       })
-      if (!res.ok) {
-        throw new Error(`Analysis failed (${res.status}). Please try again.`)
-      }
       const data = await res.json()
-      if (data.error) throw new Error(data.error)
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `Analysis failed (${res.status}). Please try again.`)
+      }
       setQuickScanResults(data)
       setPhase('results')
     } catch (err) {
@@ -478,8 +477,8 @@ function SessionPageInner() {
         if (data.error) throw new Error(data.error)
         setPunchlistItems(data.items)
         if (id && data.items?.length) savePunchlistItems(id, data.items)
-      } catch {
-        setPunchlistError('Something went wrong. Please try again.')
+      } catch (err) {
+        setPunchlistError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       }
     } else {
       setPhase('chat')
@@ -600,6 +599,10 @@ function SessionPageInner() {
         }),
       })
 
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Sorry, something went wrong. Try again.')
+      }
       if (!res.body) throw new Error('No response body')
 
       const reader = res.body.getReader()
@@ -649,7 +652,7 @@ function SessionPageInner() {
         const updated = [...prev]
         updated[updated.length - 1] = {
           role: 'assistant',
-          content: "Sorry, something went wrong. Try again.",
+          content: err instanceof Error ? err.message : 'Sorry, something went wrong. Try again.',
           isCoachMode: false,
         }
         return updated
@@ -719,8 +722,8 @@ function SessionPageInner() {
         item_count: data.items?.length ?? 0,
         exchange_count: exchangeCount,
       })
-    } catch {
-      setPunchlistError('Something went wrong generating your punch list. Please try again.')
+    } catch (err) {
+      setPunchlistError(err instanceof Error ? err.message : 'Something went wrong generating your punch list. Please try again.')
     }
   }
 
