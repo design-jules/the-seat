@@ -37,30 +37,6 @@ export default function Resources() {
               </div>
             </div>
 
-            {/* Sparkle Dust Starter Kit — coming soon */}
-            <div className="resource-card resource-card-soon">
-              <div className="resource-cover resource-cover-sparkle">
-                <div>
-                  <div className="resource-cover-title">Sparkle Dust<br />Starter Kit</div>
-                </div>
-                <span className="resource-cover-tag tag-sparkle">Starter Kit</span>
-              </div>
-              <div className="resource-body">
-                <h3>Sparkle Dust Starter Kit</h3>
-                <p>Ideas for engagement moments: analogies, games, ice breakers. Includes the World&apos;s Best Ice Breakers and more.</p>
-                <div className="resources-coming-pill resources-coming-pill-big" style={{ marginTop: '8px' }}>✨ Coming soon!</div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* More coming soon */}
-          <div className="resources-coming-soon">
-            <div className="resources-coming-soon-text">
-              <h3>More resources on the way.</h3>
-              <p>New tools, frameworks, and templates being added regularly.</p>
-            </div>
-            <div className="resources-coming-pill">More coming soon</div>
           </div>
 
         </div>
